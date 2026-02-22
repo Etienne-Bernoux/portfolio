@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Etienne Bernoux — Tech Lead & Software Craftsman</title>
+  <meta name="description" content="Etienne Bernoux — Artisan développeur passionné, Tech Lead full remote. Portfolio & CV.">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap');
+
+    :root {
+      --text: #e4e4e7;
+      --text-dim: #a1a1aa;
+      --accent: #22d3ee;
+      --accent2: #a78bfa;
+      --accent3: #34d399;
+      --bg: #09090b;
+      --card-bg: #18181b;
+      --border: #27272a;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', -apple-system, sans-serif;
+      --radius: 8px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--sans);
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: rgba(34, 211, 238, 0.2); }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 5rem 1.5rem 3rem;
+    }
+
+    /* ── Lang toggle ── */
+    .lang-toggle {
+      position: fixed;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.35rem 0.75rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      cursor: pointer;
+      color: var(--text-dim);
+      z-index: 10;
+      transition: all 0.2s;
+    }
+    .lang-toggle:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── Hero ── */
+    .hero { margin-bottom: 4rem; }
+
+    .hero-prompt {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      margin-bottom: 0.75rem;
+    }
+    .hero-prompt .path { color: var(--accent3); }
+    .hero-prompt .chevron { color: var(--accent); }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 0.5rem;
+    }
+    .hero h1 .dot { color: var(--accent); }
+
+    .hero .tagline {
+      font-size: 1.15rem;
+      color: var(--text-dim);
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .hero-links a {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      padding: 0.4rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: all 0.2s;
+    }
+    .hero-links a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: rgba(34, 211, 238, 0.05);
+    }
+
+    /* ── Sections ── */
+    section { margin-bottom: 3.5rem; }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent2);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── About ── */
+    .about p {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      max-width: 600px;
+    }
+    .about .highlight {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* ── Timeline (Experience) ── */
+    .timeline { position: relative; }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 1.75rem;
+      padding-bottom: 2rem;
+      border-left: 1px solid var(--border);
+    }
+    .timeline-item:last-child { padding-bottom: 0; }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 6px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(34, 211, 238, 0.4);
+    }
+    .timeline-item.past::before {
+      background: var(--border);
+      box-shadow: none;
+    }
+
+    .timeline-date {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-bottom: 0.2rem;
+    }
+
+    .timeline-role {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.1rem;
+    }
+
+    .timeline-company {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+
+    .timeline-desc {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+    }
+
+    /* ── Projects ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .project-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      transition: all 0.2s;
+    }
+    .project-card:hover {
+      border-color: var(--accent2);
+      transform: translateY(-2px);
+    }
+
+    .project-card .name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .project-card .ctx {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent2);
+      margin-bottom: 0.5rem;
+    }
+
+    .project-card .desc {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    /* ── Skills ── */
+    .skills-categories { display: flex; flex-direction: column; gap: 1.25rem; }
+
+    .skill-cat-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent3);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .skills-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .skill-tag {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 4px;
+      background: rgba(34, 211, 238, 0.08);
+      color: var(--accent);
+      border: 1px solid rgba(34, 211, 238, 0.15);
+    }
+    .skill-tag.purple {
+      background: rgba(167, 139, 250, 0.08);
+      color: var(--accent2);
+      border-color: rgba(167, 139, 250, 0.15);
+    }
+    .skill-tag.green {
+      background: rgba(52, 211, 153, 0.08);
+      color: var(--accent3);
+      border-color: rgba(52, 211, 153, 0.15);
+    }
+
+    /* ── Education ── */
+    .edu-item { margin-bottom: 1rem; }
+    .edu-title { font-weight: 600; font-size: 0.95rem; }
+    .edu-meta {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
+    /* ── Footer ── */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    .footer-links a {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-copy {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--border);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 580px) {
+      .container { padding: 3rem 1rem 2rem; }
+      .hero h1 { font-size: 1.8rem; }
+      .projects-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Bilingual ── */
+    [data-lang="en"] { display: none; }
+    html[lang="en"] [data-lang="en"] { display: revert; }
+    html[lang="en"] [data-lang="fr"] { display: none; }
+
+    /* ── Canvas BG ── */
+    #bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .container { position: relative; z-index: 1; }
+    .lang-toggle { z-index: 10; }
+
+    /* ── Subtle animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero, section, footer {
+      animation: fadeUp 0.5s ease-out both;
+    }
+    section:nth-child(2) { animation-delay: 0.05s; }
+    section:nth-child(3) { animation-delay: 0.1s; }
+    section:nth-child(4) { animation-delay: 0.15s; }
+    section:nth-child(5) { animation-delay: 0.2s; }
+    section:nth-child(6) { animation-delay: 0.25s; }
+    footer { animation-delay: 0.3s; }
+  </style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<button class="lang-toggle" onclick="toggleLang()" aria-label="Switch language">
+  <span data-lang="fr">EN</span>
+  <span data-lang="en">FR</span>
+</button>
+
+<div class="container">
+
+  <!-- ── Hero ── -->
+  <div class="hero">
+    <div class="hero-prompt">
+      <span class="path">~/etienne</span> <span class="chevron">&rsaquo;</span> cat README.md
+    </div>
+    <h1>Etienne Bernoux<span class="dot">.</span></h1>
+    <p class="tagline">
+      <span data-lang="fr">Artisan développeur passionné &middot; Tech Lead &middot; Full remote</span>
+      <span data-lang="en">Passionate Software Craftsman &middot; Tech Lead &middot; Full remote</span>
+    </p>
+    <div class="hero-links">
+      <a href="mailto:etienne@bernoux.fr">etienne@bernoux.fr</a>
+      <a href="https://github.com/Etienne-Bernoux" target="_blank">github</a>
+      <a href="https://www.linkedin.com/in/etienne-bernoux-06313682/" target="_blank">linkedin</a>
+      <a href="#">Dr&ocirc;me, France</a>
+    </div>
+  </div>
+
+  <!-- ── About ── -->
+  <section class="about">
+    <div class="section-label">
+      <span data-lang="fr">// &agrave; propos</span>
+      <span data-lang="en">// about</span>
+    </div>
+    <p data-lang="fr">
+      <span class="highlight">Tech Lead avec +7 ans d'exp&eacute;rience</span>, sp&eacute;cialis&eacute; dans l'&eacute;cosyst&egrave;me JavaScript/Node.js. Passionn&eacute; par le software craftsmanship, l'architecture logicielle et les design patterns. J'accompagne des &eacute;quipes sur des plateformes e-commerce &agrave; forte valeur business&nbsp;&mdash; de l'int&eacute;gration de syst&egrave;mes de paiement &agrave; l'orchestration de flux transactionnels complexes.
+    </p>
+    <p data-lang="en">
+      <span class="highlight">Tech Lead with 7+ years of experience</span>, specialized in the JavaScript/Node.js ecosystem. Passionate about software craftsmanship, software architecture and design patterns. I lead teams building high-value e-commerce platforms&nbsp;&mdash; from payment system integration to complex transactional flow orchestration.
+    </p>
+  </section>
+
+  <!-- ── Experience ── -->
+  <section>
+    <div class="section-label">
+      <span data-lang="fr">// exp&eacute;rience</span>
+      <span data-lang="en">// experience</span>
+    </div>
+
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-date">2024 &mdash; now</div>
+        <div class="timeline-role">Technical Lead</div>
+        <div class="timeline-company">InVivo Digital Factory</div>
+        <p class="timeline-desc" data-lang="fr">
+          Pilotage de l'&eacute;quipe transactions financi&egrave;res pour Jardiland.com, Gammvert.fr, Aladin.farm, Farmi.fr. Int&eacute;gration PSP (Payplug), paiement fractionn&eacute; (Alma), interm&eacute;diation OMS&nbsp;&harr;&nbsp;SAP.
+        </p>
+        <p class="timeline-desc" data-lang="en">
+          Leading financial transactions team for Jardiland.com, Gammvert.fr, Aladin.farm, Farmi.fr. PSP integration (Payplug), split payment (Alma), OMS&nbsp;&harr;&nbsp;SAP intermediation.
+        </p>
+      </div>
+
+      <div class="timeline-item past">
+        <div class="timeline-date">2023 &mdash; 2024</div>
+        <div class="timeline-role">
+          <span data-lang="fr">Ing&eacute;nieur logiciels senior</span>
+          <span data-lang="en">Senior Software Engineer</span>
+        </div>
+        <div class="timeline-company">InVivo Digital Factory</div>
+        <p class="timeline-desc" data-lang="fr">
+          Refonte compl&egrave;te de la brique transactionnelle (du panier &agrave; la commande) sur B2Ag.farm et la marque blanche enseigne.com.
+        </p>
+        <p class="timeline-desc" data-lang="en">
+          Complete redesign of the transactional layer (cart to order) on B2Ag.farm and the enseigne.com white-label solution.
+        </p>
+      </div>
+
+      <div class="timeline-item past">
+        <div class="timeline-date">2021 &mdash; 2022</div>
+        <div class="timeline-role">
+          <span data-lang="fr">Ing&eacute;nieur logiciels confirm&eacute;</span>
+          <span data-lang="en">Software Engineer</span>
+        </div>
+        <div class="timeline-company">InVivo Digital Factory</div>
+        <p class="timeline-desc" data-lang="fr">
+          Conception d'une brique logistique commune. D&eacute;veloppement dans l'&eacute;quipe gestion de l'offre pour Aladin.farm, Fami.com, Jardiland.com, Gammvert.fr.
+        </p>
+        <p class="timeline-desc" data-lang="en">
+          Design of a shared logistics module. Development within the product management team for Aladin.farm, Fami.com, Jardiland.com, Gammvert.fr.
+        </p>
+      </div>
+
+      <div class="timeline-item past">
+        <div class="timeline-date">2018 &mdash; 2021</div>
+        <div class="timeline-role">Consultant</div>
+        <div class="timeline-company">OCTO Technology</div>
+        <p class="timeline-desc" data-lang="fr">
+          Missions vari&eacute;es : Aladin.farm (InVivo), billetterie Roland-Garros, conception de numerique.gouv.fr pour la DINSIC. Stack : Jekyll, Foundation, CircleCI.
+        </p>
+        <p class="timeline-desc" data-lang="en">
+          Various missions: Aladin.farm (InVivo), Roland-Garros ticketing, design &amp; development of numerique.gouv.fr for the French Digital Administration.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Projects ── -->
+  <section>
+    <div class="section-label">
+      <span data-lang="fr">// projets</span>
+      <span data-lang="en">// projects</span>
+    </div>
+
+    <div class="projects-grid">
+
+      <div class="project-card">
+        <div class="name">Jardiland &middot; Gammvert</div>
+        <div class="ctx">invivo &middot; 2021&mdash;now</div>
+        <p class="desc" data-lang="fr">Plateformes e-commerce multi-enseignes. Architecture transactionnelle, paiement, logistique, SAP.</p>
+        <p class="desc" data-lang="en">Multi-brand e-commerce platforms. Transactional architecture, payment, logistics, SAP.</p>
+      </div>
+
+      <div class="project-card">
+        <div class="name">Aladin.farm &middot; Farmi</div>
+        <div class="ctx">invivo + octo &middot; 2018&mdash;now</div>
+        <p class="desc" data-lang="fr">Plateforme B2Ag pour le monde agricole. Du d&eacute;veloppement initial au pilotage technique.</p>
+        <p class="desc" data-lang="en">B2Ag platform for agriculture. From initial development to technical leadership.</p>
+      </div>
+
+      <div class="project-card">
+        <div class="name">numerique.gouv.fr</div>
+        <div class="ctx">octo &middot; dinsic &middot; 2019</div>
+        <p class="desc" data-lang="fr">Site officiel de la direction interminist&eacute;rielle du num&eacute;rique. Jekyll, Foundation, CircleCI.</p>
+        <p class="desc" data-lang="en">Official website of the French Digital Administration. Jekyll, Foundation, CircleCI.</p>
+      </div>
+
+      <div class="project-card">
+        <div class="name">Roland-Garros</div>
+        <div class="ctx">octo &middot; rg.com &middot; 2019</div>
+        <p class="desc" data-lang="fr">Billetterie du tournoi de Roland-Garros.</p>
+        <p class="desc" data-lang="en">Ticketing system for the Roland-Garros tournament.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Skills ── -->
+  <section>
+    <div class="section-label">
+      <span data-lang="fr">// comp&eacute;tences</span>
+      <span data-lang="en">// skills</span>
+    </div>
+
+    <div class="skills-categories">
+      <div>
+        <div class="skill-cat-label">stack</div>
+        <div class="skills-row">
+          <span class="skill-tag">JavaScript</span>
+          <span class="skill-tag">Node.js</span>
+          <span class="skill-tag">Vue.js</span>
+          <span class="skill-tag">Full Stack</span>
+        </div>
+      </div>
+      <div>
+        <div class="skill-cat-label">architecture</div>
+        <div class="skills-row">
+          <span class="skill-tag purple">Software Architecture</span>
+          <span class="skill-tag purple">Design Patterns</span>
+          <span class="skill-tag purple">Software Craftsmanship</span>
+          <span class="skill-tag purple">Payment Systems</span>
+        </div>
+      </div>
+      <div>
+        <div class="skill-cat-label">leadership</div>
+        <div class="skills-row">
+          <span class="skill-tag green">Technical Leadership</span>
+          <span class="skill-tag green">Team Management</span>
+          <span class="skill-tag green">E-commerce</span>
+          <span class="skill-tag green">SAP Integration</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Education ── -->
+  <section>
+    <div class="section-label">
+      <span data-lang="fr">// formation</span>
+      <span data-lang="en">// education</span>
+    </div>
+
+    <div class="edu-item">
+      <div class="edu-title" data-lang="fr">Dipl&ocirc;me d'ing&eacute;nieur &mdash; Syst&egrave;mes d'information</div>
+      <div class="edu-title" data-lang="en">Engineering Degree &mdash; Information Systems</div>
+      <div class="edu-meta">ECE Paris &middot; 2012 &mdash; 2018</div>
+    </div>
+
+    <div class="edu-item">
+      <div class="edu-title">IELTS &mdash; 7.0 / 9.0</div>
+      <div class="edu-meta">British Council &middot; 2016</div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="footer-links">
+      <a href="mailto:etienne@bernoux.fr">email</a>
+      <a href="https://github.com/Etienne-Bernoux" target="_blank">github</a>
+      <a href="https://www.linkedin.com/in/etienne-bernoux-06313682/" target="_blank">linkedin</a>
+    </div>
+    <div class="footer-copy">&copy; 2026 Etienne Bernoux</div>
+  </footer>
+
+</div>
+
+<script>
+  function toggleLang() {
+    const html = document.documentElement;
+    html.lang = html.lang === 'fr' ? 'en' : 'fr';
+  }
+
+  // ── Particle network ──
+  (() => {
+    const canvas = document.getElementById('bg');
+    const ctx = canvas.getContext('2d');
+    let w, h, particles;
+    const COUNT = 80;
+    const MAX_DIST = 180;
+    const SPEED = 0.25;
+
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+
+    function init() {
+      resize();
+      particles = Array.from({ length: COUNT }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * SPEED,
+        vy: (Math.random() - 0.5) * SPEED,
+        r: Math.random() * 1.5 + 0.5,
+      }));
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+
+        // move
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.y < 0 || p.y > h) p.vy *= -1;
+
+        // dot
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(34, 211, 238, 0.45)';
+        ctx.fill();
+
+        // lines
+        for (let j = i + 1; j < particles.length; j++) {
+          const q = particles[j];
+          const dx = p.x - q.x;
+          const dy = p.y - q.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < MAX_DIST) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(q.x, q.y);
+            ctx.strokeStyle = `rgba(34, 211, 238, ${0.2 * (1 - dist / MAX_DIST)})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    init();
+    draw();
+  })();
+</script>
+
+</body>
+</html>
