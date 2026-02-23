@@ -5,8 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Etienne Bernoux — Tech Lead & Software Craftsman</title>
   <meta name="description" content="Etienne Bernoux — Artisan développeur passionné, Tech Lead full remote. Portfolio & CV.">
+  <meta property="og:title" content="Etienne Bernoux — Tech Lead & Software Craftsman">
+  <meta property="og:description" content="Je construis des choses — du code, des meubles, des outils.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:locale:alternate" content="en_GB">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap');
 
     :root {
       --text: #e4e4e7;
@@ -139,142 +146,270 @@
       font-weight: 500;
     }
 
-    /* ── Timeline (Experience) ── */
-    .timeline { position: relative; }
+    /* (timeline removed — replaced by achievements) */
 
-    .timeline-item {
+    /* ── Exploration Map ── */
+    .map-wrap {
       position: relative;
-      padding-left: 1.75rem;
-      padding-bottom: 2rem;
-      border-left: 1px solid var(--border);
+      width: 100%;
+      padding: 1rem 0;
     }
-    .timeline-item:last-child { padding-bottom: 0; }
-
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      left: -4px;
-      top: 6px;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 8px rgba(34, 211, 238, 0.4);
-    }
-    .timeline-item.past::before {
-      background: var(--border);
-      box-shadow: none;
+    .map-svg {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      height: auto;
     }
 
-    .timeline-date {
+    /* Zone regions */
+    .map-svg .zone {
+      cursor: pointer;
+      transition: opacity 0.3s;
+      opacity: 0.7;
+    }
+    .map-svg .zone:hover { opacity: 1; }
+    .map-svg .zone.active { opacity: 1; }
+
+    .map-svg .zone-border {
+      fill: none;
+      stroke-width: 1;
+      stroke-dasharray: 4 3;
+      transition: stroke-width 0.2s, stroke-dasharray 0.2s;
+    }
+    .map-svg .zone:hover .zone-border,
+    .map-svg .zone.active .zone-border {
+      stroke-width: 1.5;
+      stroke-dasharray: none;
+    }
+
+    .map-svg .zone-label {
       font-family: var(--mono);
-      font-size: 0.75rem;
-      color: var(--text-dim);
-      margin-bottom: 0.2rem;
-    }
-
-    .timeline-role {
+      font-size: 11px;
       font-weight: 600;
-      font-size: 1rem;
-      margin-bottom: 0.1rem;
+      pointer-events: none;
+    }
+    .map-svg .zone-icon {
+      font-size: 22px;
+      pointer-events: none;
     }
 
-    .timeline-company {
+    /* Map POIs (points of interest) */
+    .map-svg .poi {
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .map-svg .poi:hover { transform: scale(1.2); }
+    .map-svg .poi-dot {
+      transition: r 0.2s, filter 0.2s;
+    }
+    .map-svg .poi:hover .poi-dot {
+      filter: drop-shadow(0 0 6px currentColor);
+    }
+    .map-svg .poi-label {
       font-family: var(--mono);
-      font-size: 0.85rem;
-      color: var(--accent);
-      margin-bottom: 0.4rem;
+      font-size: 8px;
+      pointer-events: none;
     }
 
-    .timeline-desc {
-      font-size: 0.88rem;
-      color: var(--text-dim);
+    /* Map paths between POIs */
+    .map-svg .map-path {
+      fill: none;
+      stroke-dasharray: 3 3;
+      opacity: 0.3;
     }
 
-    /* ── Projects ── */
-    .projects-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-
-    .project-card {
+    /* Detail panel */
+    .map-detail {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 1.25rem;
-      transition: all 0.2s;
+      padding: 1rem 1.25rem;
+      margin-top: 1rem;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: all 0.4s ease-out;
     }
-    .project-card:hover {
-      border-color: var(--accent2);
-      transform: translateY(-2px);
+    .map-detail.show {
+      max-height: 200px;
+      opacity: 1;
     }
-
-    .project-card .name {
+    .map-detail .detail-zone {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.4rem;
+    }
+    .map-detail .detail-name {
       font-weight: 600;
       font-size: 0.95rem;
       margin-bottom: 0.15rem;
     }
-
-    .project-card .ctx {
+    .map-detail .detail-ctx {
       font-family: var(--mono);
       font-size: 0.7rem;
-      color: var(--accent2);
-      margin-bottom: 0.5rem;
+      color: var(--text-dim);
+      margin-bottom: 0.35rem;
     }
-
-    .project-card .desc {
-      font-size: 0.82rem;
+    .map-detail .detail-desc {
+      font-size: 0.85rem;
       color: var(--text-dim);
       line-height: 1.5;
     }
+    .map-detail a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .map-detail a:hover { text-decoration: underline; }
 
-    /* ── Skills ── */
-    .skills-categories { display: flex; flex-direction: column; gap: 1.25rem; }
-
-    .skill-cat-label {
+    /* ── Skill Tree ── */
+    .skill-tree-wrap {
+      position: relative;
+      width: 100%;
+      overflow-x: auto;
+      padding: 1rem 0;
+    }
+    .skill-tree-svg {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      height: auto;
+    }
+    .skill-tree-svg .edge {
+      stroke-dasharray: 6 4;
+      stroke-dashoffset: 100;
+      transition: stroke-dashoffset 0.8s ease-out, opacity 0.6s;
+      opacity: 0;
+    }
+    .skill-tree-svg.revealed .edge {
+      stroke-dashoffset: 0;
+      opacity: 1;
+    }
+    .skill-tree-svg .node-circle {
+      transition: r 0.2s, filter 0.2s;
+      cursor: pointer;
+    }
+    .skill-tree-svg .node-circle:hover {
+      r: 22;
+      filter: drop-shadow(0 0 12px currentColor);
+    }
+    .skill-tree-svg .node-icon {
+      pointer-events: none;
+      font-size: 14px;
+      transition: font-size 0.2s;
+    }
+    .skill-tree-svg .node-label {
       font-family: var(--mono);
-      font-size: 0.7rem;
-      color: var(--accent3);
-      margin-bottom: 0.5rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      font-size: 10px;
+      fill: var(--text-dim);
+      transition: fill 0.2s;
+      pointer-events: none;
     }
-
-    .skills-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
+    .skill-tree-svg .node-group:hover .node-label { fill: var(--text); }
+    .skill-tree-svg .node-group {
+      opacity: 0;
+      transform: scale(0.5);
+      transition: opacity 0.4s ease-out, transform 0.4s ease-out;
     }
+    .skill-tree-svg.revealed .node-group {
+      opacity: 1;
+      transform: scale(1);
+    }
+    /* staggered reveal */
+    .skill-tree-svg.revealed .node-group.d0 { transition-delay: 0s; }
+    .skill-tree-svg.revealed .node-group.d1 { transition-delay: 0.15s; }
+    .skill-tree-svg.revealed .node-group.d2 { transition-delay: 0.3s; }
+    .skill-tree-svg.revealed .node-group.d3 { transition-delay: 0.45s; }
+    .skill-tree-svg.revealed .edge.d0 { transition-delay: 0.05s; }
+    .skill-tree-svg.revealed .edge.d1 { transition-delay: 0.2s; }
+    .skill-tree-svg.revealed .edge.d2 { transition-delay: 0.35s; }
 
-    .skill-tag {
+    /* Tooltip */
+    .tree-tooltip {
+      position: fixed;
+      pointer-events: none;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.5rem 0.75rem;
       font-family: var(--mono);
       font-size: 0.75rem;
-      padding: 0.3rem 0.65rem;
-      border-radius: 4px;
-      background: rgba(34, 211, 238, 0.08);
+      color: var(--text);
+      z-index: 20;
+      opacity: 0;
+      transition: opacity 0.15s;
+      max-width: 220px;
+    }
+    .tree-tooltip.show { opacity: 1; }
+    .tree-tooltip .tt-name { font-weight: 600; margin-bottom: 2px; }
+    .tree-tooltip .tt-desc { color: var(--text-dim); font-size: 0.7rem; }
+
+    /* ── Achievements ── */
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+    .achievement {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1rem 1rem 3.2rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    .achievement.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .achievement:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .achievement::before {
+      content: attr(data-icon);
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.3rem;
+      width: 1.8rem;
+      text-align: center;
+    }
+    .achievement .ach-title {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+    .achievement .ach-desc {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+    .achievement .ach-year {
+      font-family: var(--mono);
+      font-size: 0.65rem;
       color: var(--accent);
-      border: 1px solid rgba(34, 211, 238, 0.15);
+      margin-top: 4px;
     }
-    .skill-tag.purple {
-      background: rgba(167, 139, 250, 0.08);
-      color: var(--accent2);
-      border-color: rgba(167, 139, 250, 0.15);
-    }
-    .skill-tag.green {
-      background: rgba(52, 211, 153, 0.08);
-      color: var(--accent3);
-      border-color: rgba(52, 211, 153, 0.15);
+    .achievement.legendary { border-color: rgba(234, 179, 8, 0.3); }
+    .achievement.legendary:hover { border-color: rgba(234, 179, 8, 0.6); box-shadow: 0 0 20px rgba(234, 179, 8, 0.08); }
+    .achievement.legendary .ach-year { color: #eab308; }
+    .achievement.epic { border-color: rgba(167, 139, 250, 0.3); }
+    .achievement.epic:hover { border-color: rgba(167, 139, 250, 0.6); }
+    .achievement.epic .ach-year { color: var(--accent2); }
+
+    @media (max-width: 580px) {
+      .achievements-grid { grid-template-columns: 1fr; }
     }
 
-    /* ── Education ── */
-    .edu-item { margin-bottom: 1rem; }
-    .edu-title { font-weight: 600; font-size: 0.95rem; }
-    .edu-meta {
-      font-family: var(--mono);
-      font-size: 0.8rem;
-      color: var(--text-dim);
-    }
+    /* (education merged into achievements) */
 
     /* ── Footer ── */
     footer {
@@ -309,7 +444,7 @@
     @media (max-width: 580px) {
       .container { padding: 3rem 1rem 2rem; }
       .hero h1 { font-size: 1.8rem; }
-      .projects-grid { grid-template-columns: 1fr; }
+      .map-svg { min-height: 280px; }
     }
 
     /* ── Bilingual ── */
@@ -327,6 +462,76 @@
     .container { position: relative; z-index: 1; }
     .lang-toggle { z-index: 10; }
 
+    /* ── Easter eggs ── */
+    .hero h1 .dot {
+      cursor: default;
+      transition: all 0.3s;
+    }
+    .hero h1 .dot:hover {
+      text-shadow: 0 0 12px var(--accent);
+    }
+    .secret-msg {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.5s ease-out;
+      margin-top: 0.5rem;
+    }
+    .secret-msg.show {
+      opacity: 1;
+      max-height: 3rem;
+    }
+
+    /* Konami mode */
+    .konami-active {
+      animation: konamiFlash 0.3s;
+    }
+    @keyframes konamiFlash {
+      0%, 100% { filter: none; }
+      50% { filter: hue-rotate(90deg) saturate(2); }
+    }
+    .konami-toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--card-bg);
+      border: 1px solid #eab308;
+      border-radius: var(--radius);
+      padding: 0.75rem 1.5rem;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: #eab308;
+      z-index: 100;
+      opacity: 0;
+      transition: all 0.4s ease-out;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .konami-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Stars easter egg tooltip */
+    .stars-hint {
+      cursor: help;
+      border-bottom: 1px dotted rgba(167, 139, 250, 0.3);
+      transition: border-color 0.2s;
+    }
+    .stars-hint:hover {
+      border-color: var(--accent2);
+    }
+
+    /* ── Focus styles (a11y) ── */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
     /* ── Subtle animations ── */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(12px); }
@@ -341,11 +546,22 @@
     section:nth-child(5) { animation-delay: 0.2s; }
     section:nth-child(6) { animation-delay: 0.25s; }
     footer { animation-delay: 0.3s; }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      #bg { display: none; }
+    }
   </style>
 </head>
 <body>
 
 <canvas id="bg"></canvas>
+<div class="konami-toast" id="konami-toast">&#127918; Achievement unlocked: You know the code.</div>
 
 <button class="lang-toggle" onclick="toggleLang()" aria-label="Switch language">
   <span data-lang="fr">EN</span>
@@ -353,210 +569,427 @@
 </button>
 
 <div class="container">
-
-  <!-- ── Hero ── -->
+<main>
   <div class="hero">
     <div class="hero-prompt">
       <span class="path">~/etienne</span> <span class="chevron">&rsaquo;</span> cat README.md
     </div>
-    <h1>Etienne Bernoux<span class="dot">.</span></h1>
+    <h1>Etienne Bernoux<span class="dot" id="secret-dot" title="">.</span></h1>
+    <div class="secret-msg" id="secret-msg">
+      <span data-lang="fr">&gt; The factory must grow. &mdash; mais d'abord, un caf&eacute;.</span>
+      <span data-lang="en">&gt; The factory must grow. &mdash; but first, coffee.</span>
+    </div>
     <p class="tagline">
-      <span data-lang="fr">Artisan développeur passionné &middot; Tech Lead &middot; Full remote</span>
-      <span data-lang="en">Passionate Software Craftsman &middot; Tech Lead &middot; Full remote</span>
+      <span data-lang="fr">Je construis des choses &mdash; du code, des meubles, des outils.<br>Tech Lead le jour, artisan le reste du temps.</span>
+      <span data-lang="en">I build things &mdash; code, furniture, tools.<br>Tech Lead by day, craftsman the rest of the time.</span>
     </p>
     <div class="hero-links">
       <a href="mailto:etienne@bernoux.fr">etienne@bernoux.fr</a>
       <a href="https://github.com/Etienne-Bernoux" target="_blank">github</a>
       <a href="https://www.linkedin.com/in/etienne-bernoux-06313682/" target="_blank">linkedin</a>
-      <a href="#">Dr&ocirc;me, France</a>
+      <span style="font-family:var(--mono);font-size:0.8rem;color:var(--text-dim);padding:0.4rem 0.85rem;border:1px solid var(--border);border-radius:var(--radius)">Dr&ocirc;me, France</span>
     </div>
   </div>
 
-  <!-- ── About ── -->
+  <!-- ── Achievements ── -->
+  <section id="achievements-section">
+    <div class="section-label">
+      <span data-lang="fr">// achievements unlocked</span>
+      <span data-lang="en">// achievements unlocked</span>
+    </div>
+
+    <div class="achievements-grid">
+
+      <div class="achievement legendary" data-icon="&#9733;" style="transition-delay:0s">
+        <div class="ach-title">Tech Lead</div>
+        <div class="ach-desc" data-lang="fr">Pilotage d'&eacute;quipe &middot; transactions financi&egrave;res &middot; 4 marques</div>
+        <div class="ach-desc" data-lang="en">Team leadership &middot; financial transactions &middot; 4 brands</div>
+        <div class="ach-year">InVivo Digital Factory &middot; 2024</div>
+      </div>
+
+      <div class="achievement epic" data-icon="&#9878;">
+        <div class="ach-title" data-lang="fr">Refonte transactionnelle</div>
+        <div class="ach-title" data-lang="en">Transactional rewrite</div>
+        <div class="ach-desc" data-lang="fr">Du panier &agrave; la commande &mdash; migration compl&egrave;te des flux</div>
+        <div class="ach-desc" data-lang="en">Cart to order &mdash; complete flow migration</div>
+        <div class="ach-year">InVivo &middot; 2023</div>
+      </div>
+
+      <div class="achievement" data-icon="&#9881;">
+        <div class="ach-title" data-lang="fr">Brique logistique</div>
+        <div class="ach-title" data-lang="en">Logistics module</div>
+        <div class="ach-desc" data-lang="fr">Architecture d'un module logistique partag&eacute; multi-enseignes</div>
+        <div class="ach-desc" data-lang="en">Shared logistics module architecture across brands</div>
+        <div class="ach-year">InVivo &middot; 2022</div>
+      </div>
+
+      <div class="achievement" data-icon="&#127934;">
+        <div class="ach-title">Roland-Garros</div>
+        <div class="ach-desc" data-lang="fr">Billetterie du tournoi &mdash; rg.com</div>
+        <div class="ach-desc" data-lang="en">Tournament ticketing system &mdash; rg.com</div>
+        <div class="ach-year">OCTO Technology &middot; 2019</div>
+      </div>
+
+      <div class="achievement epic" data-icon="&#127467;&#127479;">
+        <div class="ach-title">numerique.gouv.fr</div>
+        <div class="ach-desc" data-lang="fr">Site officiel de la DINSIC &mdash; service public num&eacute;rique</div>
+        <div class="ach-desc" data-lang="en">Official DINSIC website &mdash; French digital public service</div>
+        <div class="ach-year">OCTO &middot; DINSIC &middot; 2019</div>
+      </div>
+
+      <div class="achievement" data-icon="&#127793;">
+        <div class="ach-title">Aladin.farm</div>
+        <div class="ach-desc" data-lang="fr">Plateforme B2Ag pour le monde agricole &mdash; du d&eacute;but &agrave; aujourd'hui</div>
+        <div class="ach-desc" data-lang="en">B2Ag platform for agriculture &mdash; from day one to now</div>
+        <div class="ach-year">OCTO &rarr; InVivo &middot; 2018</div>
+      </div>
+
+      <div class="achievement" data-icon="&#128640;">
+        <div class="ach-title" data-lang="fr">Premier drone</div>
+        <div class="ach-title" data-lang="en">First drone</div>
+        <div class="ach-desc" data-lang="fr">Chef de projet 2 ans &mdash; ECE Inov-Award</div>
+        <div class="ach-desc" data-lang="en">Project lead 2 years &mdash; ECE Inov-Award</div>
+        <div class="ach-year">ECE &middot; 2012 &mdash; 2014</div>
+      </div>
+
+      <div class="achievement" data-icon="&#9968;">
+        <div class="ach-title" data-lang="fr">Dipl&ocirc;me d'ing&eacute;nieur</div>
+        <div class="ach-title" data-lang="en">Engineering Degree</div>
+        <div class="ach-desc" data-lang="fr">Syst&egrave;mes d'information &mdash; ECE Paris</div>
+        <div class="ach-desc" data-lang="en">Information Systems &mdash; ECE Paris</div>
+        <div class="ach-year">ECE &middot; 2018</div>
+      </div>
+
+      <div class="achievement" data-icon="&#9876;">
+        <div class="ach-title" data-lang="fr">Chef scout</div>
+        <div class="ach-title" data-lang="en">Scout leader</div>
+        <div class="ach-desc" data-lang="fr">Encadrement &middot; transmission &middot; plein air</div>
+        <div class="ach-desc" data-lang="en">Leadership &middot; passing on &middot; outdoors</div>
+        <div class="ach-year">Scouts Unitaires de France</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Exploration Map ── -->
+  <section id="map-section">
+    <div class="section-label">
+      <span data-lang="fr">// ce que je construis</span>
+      <span data-lang="en">// things I build</span>
+    </div>
+
+    <div class="map-wrap">
+      <svg id="explore-map" class="map-svg" viewBox="0 0 720 480" xmlns="http://www.w3.org/2000/svg">
+
+        <!-- ── Paths between POIs ── -->
+        <path class="map-path" d="M200,240 C260,200 300,160 360,120" stroke="#a78bfa" stroke-width="0.8"/>
+        <path class="map-path" d="M200,240 C200,300 240,360 300,380" stroke="#eab308" stroke-width="0.8"/>
+        <path class="map-path" d="M200,240 C140,240 100,200 80,160" stroke="#22d3ee" stroke-width="0.8"/>
+        <path class="map-path" d="M360,120 C420,100 480,110 520,130" stroke="#a78bfa" stroke-width="0.5"/>
+        <path class="map-path" d="M300,380 C360,400 400,390 440,370" stroke="#eab308" stroke-width="0.5"/>
+        <path class="map-path" d="M80,160 C60,120 70,80 100,60" stroke="#22d3ee" stroke-width="0.5"/>
+        <path class="map-path" d="M530,240 C560,200 580,170 600,140" stroke="#34d399" stroke-width="0.8"/>
+        <path class="map-path" d="M530,240 C560,280 580,310 600,340" stroke="#34d399" stroke-width="0.5"/>
+
+        <!-- ── Zone: CODE (west) ── -->
+        <g class="zone" data-zone="code">
+          <rect class="zone-border" x="20" y="80" width="220" height="200" rx="12" stroke="#22d3ee"/>
+          <text class="zone-icon" x="40" y="120" fill="#22d3ee">&#128187;</text>
+          <text class="zone-label" x="70" y="116" fill="#22d3ee">CODE</text>
+        </g>
+
+        <!-- POIs: Code -->
+        <g class="poi" data-poi="jardiland" data-zone="code"
+           data-name="Jardiland &middot; Gammvert"
+           data-ctx="invivo &middot; 2021&mdash;now"
+           data-desc-fr="E-commerce multi-enseignes. Paiement, logistique, int&eacute;gration SAP."
+           data-desc-en="Multi-brand e-commerce. Payment, logistics, SAP integration."
+           data-color="#22d3ee">
+          <circle class="poi-dot" cx="80" cy="160" r="6" fill="#18181b" stroke="#22d3ee" stroke-width="1.5" style="color:#22d3ee"/>
+          <text class="poi-label" x="80" y="178" text-anchor="middle" fill="#22d3ee">Jardiland</text>
+        </g>
+        <g class="poi" data-poi="aladin" data-zone="code"
+           data-name="Aladin.farm &middot; Farmi"
+           data-ctx="invivo + octo &middot; 2018&mdash;now"
+           data-desc-fr="Plateforme B2Ag pour le monde agricole. Du d&eacute;veloppement initial au pilotage."
+           data-desc-en="B2Ag platform for agriculture. From initial development to technical leadership."
+           data-color="#22d3ee">
+          <circle class="poi-dot" cx="100" cy="210" r="5" fill="#18181b" stroke="#22d3ee" stroke-width="1.5" style="color:#22d3ee"/>
+          <text class="poi-label" x="100" y="228" text-anchor="middle" fill="#22d3ee">Aladin</text>
+        </g>
+        <g class="poi" data-poi="gouv" data-zone="code"
+           data-name="numerique.gouv.fr"
+           data-ctx="octo &middot; dinsic &middot; 2019"
+           data-desc-fr="Site officiel du num&eacute;rique de l'&Eacute;tat. Jekyll, Foundation, CircleCI."
+           data-desc-en="French government digital website. Jekyll, Foundation, CircleCI."
+           data-color="#22d3ee">
+          <circle class="poi-dot" cx="180" cy="250" r="4" fill="#18181b" stroke="#22d3ee" stroke-width="1" style="color:#22d3ee"/>
+          <text class="poi-label" x="180" y="266" text-anchor="middle" fill="#22d3ee">.gouv.fr</text>
+        </g>
+        <g class="poi" data-poi="rg" data-zone="code"
+           data-name="Roland-Garros"
+           data-ctx="octo &middot; rg.com &middot; 2019"
+           data-desc-fr="Billetterie du tournoi de Roland-Garros."
+           data-desc-en="Tournament ticketing system for Roland-Garros."
+           data-color="#22d3ee">
+          <circle class="poi-dot" cx="200" cy="190" r="4" fill="#18181b" stroke="#22d3ee" stroke-width="1" style="color:#22d3ee"/>
+          <text class="poi-label" x="200" y="206" text-anchor="middle" fill="#22d3ee">RG</text>
+        </g>
+
+        <!-- ── Zone: SPATIAL (north) ── -->
+        <g class="zone" data-zone="spatial">
+          <rect class="zone-border" x="280" y="30" width="220" height="160" rx="12" stroke="#a78bfa"/>
+          <text class="zone-icon" x="300" y="70" fill="#a78bfa">&#128752;</text>
+          <text class="zone-label" x="333" y="66" fill="#a78bfa">SPATIAL</text>
+        </g>
+
+        <!-- POIs: Spatial -->
+        <g class="poi" data-poi="space-veille" data-zone="spatial"
+           data-name-fr="Veille a&eacute;rospatiale"
+           data-name-en="Aerospace watch"
+           data-ctx="passion"
+           data-desc-fr="SpaceX, Ariane, exploration spatiale. Le ciel comme horizon."
+           data-desc-en="SpaceX, Ariane, space exploration. The sky as a horizon."
+           data-color="#a78bfa">
+          <circle class="poi-dot" cx="360" cy="100" r="5" fill="#18181b" stroke="#a78bfa" stroke-width="1.5" style="color:#a78bfa"/>
+          <text class="poi-label" x="360" y="88" text-anchor="middle" fill="#a78bfa">veille</text>
+        </g>
+        <g class="poi" data-poi="drone" data-zone="spatial"
+           data-name-fr="Drone ECE"
+           data-name-en="ECE Drone"
+           data-ctx="ece &middot; 2012&mdash;2014"
+           data-desc-fr="Conception d'un drone sur 2 ans. Chef de projet, ECE Inov-Award."
+           data-desc-en="Drone built over 2 years. Project lead, ECE Inov-Award."
+           data-color="#a78bfa">
+          <circle class="poi-dot" cx="440" cy="130" r="4" fill="#18181b" stroke="#a78bfa" stroke-width="1" style="color:#a78bfa"/>
+          <text class="poi-label" x="440" y="148" text-anchor="middle" fill="#a78bfa">drone</text>
+        </g>
+
+        <!-- ── Zone: FAMILLE (south) ── -->
+        <g class="zone" data-zone="famille">
+          <rect class="zone-border" x="240" y="320" width="230" height="140" rx="12" stroke="#eab308"/>
+          <text class="zone-icon" x="260" y="360" fill="#eab308">&#127968;</text>
+          <text class="zone-label" x="293" y="357" fill="#eab308">
+            <tspan data-lang="fr">FAMILLE</tspan>
+            <tspan data-lang="en">FAMILY</tspan>
+          </text>
+        </g>
+
+        <!-- POIs: Famille -->
+        <g class="poi" data-poi="mathquiz" data-zone="famille"
+           data-name="MathQuiz"
+           data-ctx="react &middot; pwa &middot; 2025"
+           data-desc-fr="App pour apprendre les tables de multiplication. Faite pour ceux qui comptent le plus."
+           data-desc-en="Multiplication tables app. Built for the ones who matter most."
+           data-link="https://etienne-bernoux.github.io/math-learner/"
+           data-color="#eab308">
+          <circle class="poi-dot" cx="320" cy="390" r="6" fill="#18181b" stroke="#eab308" stroke-width="1.5" style="color:#eab308"/>
+          <text class="poi-label" x="320" y="408" text-anchor="middle" fill="#eab308">MathQuiz</text>
+        </g>
+        <g class="poi" data-poi="future" data-zone="famille"
+           data-name-fr="&Agrave; venir..."
+           data-name-en="Coming soon..."
+           data-ctx="????"
+           data-desc-fr="D'autres outils pour la maison. Stay tuned."
+           data-desc-en="More tools for the household. Stay tuned."
+           data-color="#eab308">
+          <circle class="poi-dot" cx="420" cy="410" r="3" fill="#18181b" stroke="#eab308" stroke-width="1" style="color:#eab308" stroke-dasharray="2 2"/>
+          <text class="poi-label" x="420" y="426" text-anchor="middle" fill="#eab308" opacity="0.5">???</text>
+        </g>
+
+        <!-- ── Zone: ATELIER (east) ── -->
+        <g class="zone" data-zone="atelier">
+          <rect class="zone-border" x="500" y="170" width="200" height="200" rx="12" stroke="#34d399"/>
+          <text class="zone-icon" x="520" y="210" fill="#34d399">&#128296;</text>
+          <text class="zone-label" x="553" y="207" fill="#34d399">
+            <tspan data-lang="fr">ATELIER</tspan>
+            <tspan data-lang="en">WORKSHOP</tspan>
+          </text>
+        </g>
+
+        <!-- POIs: Atelier -->
+        <g class="poi" data-poi="meubles" data-zone="atelier"
+           data-name-fr="Plans de meubles"
+           data-name-en="Furniture plans"
+           data-ctx-fr="bois &middot; conception &middot; en cours"
+           data-ctx-en="wood &middot; design &middot; ongoing"
+           data-desc-fr="Conception et fabrication de meubles. Plans, d&eacute;coupes, assemblage."
+           data-desc-en="Furniture design and building. Plans, cuts, assembly."
+           data-color="#34d399">
+          <circle class="poi-dot" cx="590" cy="270" r="6" fill="#18181b" stroke="#34d399" stroke-width="1.5" style="color:#34d399"/>
+          <text class="poi-label" x="590" y="288" text-anchor="middle" fill="#34d399">meubles</text>
+        </g>
+        <g class="poi" data-poi="bricolage" data-zone="atelier"
+           data-name-fr="Bricolage"
+           data-name-en="DIY"
+           data-ctx-fr="maison &middot; r&eacute;parations"
+           data-ctx-en="home &middot; repairs"
+           data-desc-fr="Tout ce qui se r&eacute;pare, s'am&eacute;liore, se construit &agrave; la main."
+           data-desc-en="Anything that can be fixed, improved, or built by hand."
+           data-color="#34d399">
+          <circle class="poi-dot" cx="620" cy="340" r="4" fill="#18181b" stroke="#34d399" stroke-width="1" style="color:#34d399"/>
+          <text class="poi-label" x="620" y="356" text-anchor="middle" fill="#34d399">bricolage</text>
+        </g>
+
+        <!-- ── Center compass ── -->
+        <g opacity="0.3">
+          <circle cx="360" cy="240" r="3" fill="none" stroke="var(--text-dim)" stroke-width="0.5"/>
+          <line x1="360" y1="232" x2="360" y2="248" stroke="var(--text-dim)" stroke-width="0.5"/>
+          <line x1="352" y1="240" x2="368" y2="240" stroke="var(--text-dim)" stroke-width="0.5"/>
+          <text x="360" y="225" text-anchor="middle" fill="var(--text-dim)" font-size="7" font-family="var(--mono)">N</text>
+        </g>
+
+      </svg>
+    </div>
+
+    <!-- Detail panel below the map -->
+    <div class="map-detail" id="map-detail">
+      <div class="detail-zone" id="detail-zone"></div>
+      <div class="detail-name" id="detail-name"></div>
+      <div class="detail-ctx" id="detail-ctx"></div>
+      <div class="detail-desc" id="detail-desc"></div>
+    </div>
+  </section>
+
+  <!-- ── Skill Tree ── -->
+  <section id="skills-section">
+    <div class="section-label">
+      <span data-lang="fr">// arbre de comp&eacute;tences</span>
+      <span data-lang="en">// skill tree</span>
+    </div>
+
+    <div class="skill-tree-wrap">
+      <svg id="skill-tree" class="skill-tree-svg" viewBox="0 0 720 420" xmlns="http://www.w3.org/2000/svg">
+        <!-- Edges drawn first (behind nodes) -->
+        <!-- Branch: Stack (cyan) -->
+        <line class="edge d0" x1="360" y1="210" x2="200" y2="110" stroke="#22d3ee" stroke-width="1.5"/>
+        <line class="edge d1" x1="200" y1="110" x2="100" y2="50"  stroke="#22d3ee" stroke-width="1.5"/>
+        <line class="edge d1" x1="200" y1="110" x2="100" y2="170" stroke="#22d3ee" stroke-width="1.5"/>
+        <line class="edge d2" x1="100" y1="50"  x2="30"  y2="50"  stroke="#22d3ee" stroke-width="1"/>
+        <line class="edge d2" x1="100" y1="170" x2="30"  y2="130" stroke="#22d3ee" stroke-width="1"/>
+        <line class="edge d2" x1="100" y1="170" x2="30"  y2="210" stroke="#22d3ee" stroke-width="1"/>
+
+        <!-- Branch: Architecture (purple) -->
+        <line class="edge d0" x1="360" y1="210" x2="360" y2="350" stroke="#a78bfa" stroke-width="1.5"/>
+        <line class="edge d1" x1="360" y1="350" x2="260" y2="400" stroke="#a78bfa" stroke-width="1.5"/>
+        <line class="edge d1" x1="360" y1="350" x2="460" y2="400" stroke="#a78bfa" stroke-width="1.5"/>
+
+        <!-- Branch: Leadership (green) -->
+        <line class="edge d0" x1="360" y1="210" x2="530" y2="110" stroke="#34d399" stroke-width="1.5"/>
+        <line class="edge d1" x1="530" y1="110" x2="630" y2="50"  stroke="#34d399" stroke-width="1.5"/>
+        <line class="edge d1" x1="530" y1="110" x2="630" y2="170" stroke="#34d399" stroke-width="1.5"/>
+        <line class="edge d2" x1="630" y1="170" x2="690" y2="130" stroke="#34d399" stroke-width="1"/>
+        <line class="edge d2" x1="630" y1="170" x2="690" y2="220" stroke="#34d399" stroke-width="1"/>
+
+        <!-- ── Root node ── -->
+        <g class="node-group d0" data-name="Craft" data-desc-fr="Le noyau — code, bois, id&eacute;es" data-desc-en="The core — code, wood, ideas">
+          <circle class="node-circle" cx="360" cy="210" r="24" fill="#18181b" stroke="#22d3ee" stroke-width="2.5" style="color:#22d3ee"/>
+          <text class="node-icon" x="360" y="215" text-anchor="middle" fill="#22d3ee">&#9881;</text>
+          <text class="node-label" x="360" y="245" text-anchor="middle">Craft</text>
+        </g>
+
+        <!-- ── Stack branch (cyan) ── -->
+        <g class="node-group d1" data-name="JavaScript" data-desc-fr="Langage principal &middot; 7+ ans" data-desc-en="Primary language &middot; 7+ years">
+          <circle class="node-circle" cx="200" cy="110" r="18" fill="#18181b" stroke="#22d3ee" stroke-width="2" style="color:#22d3ee"/>
+          <text class="node-icon" x="200" y="115" text-anchor="middle" fill="#22d3ee">JS</text>
+          <text class="node-label" x="200" y="140" text-anchor="middle">JavaScript</text>
+        </g>
+        <g class="node-group d2" data-name="Vue.js" data-desc-fr="Framework front de pr&eacute;dilection" data-desc-en="Go-to frontend framework">
+          <circle class="node-circle" cx="100" cy="50" r="15" fill="#18181b" stroke="#22d3ee" stroke-width="1.5" style="color:#22d3ee"/>
+          <text class="node-icon" x="100" y="55" text-anchor="middle" fill="#22d3ee" style="font-size:11px">V</text>
+          <text class="node-label" x="100" y="75" text-anchor="middle">Vue.js</text>
+        </g>
+        <g class="node-group d2" data-name="Node.js" data-desc-fr="Backend runtime &middot; APIs, microservices" data-desc-en="Backend runtime &middot; APIs, microservices">
+          <circle class="node-circle" cx="100" cy="170" r="15" fill="#18181b" stroke="#22d3ee" stroke-width="1.5" style="color:#22d3ee"/>
+          <text class="node-icon" x="100" y="175" text-anchor="middle" fill="#22d3ee" style="font-size:11px">N</text>
+          <text class="node-label" x="100" y="195" text-anchor="middle">Node.js</text>
+        </g>
+        <g class="node-group d3" data-name="Full Stack" data-desc-fr="Front + Back + Infra" data-desc-en="Front + Back + Infra">
+          <circle class="node-circle" cx="30" cy="50" r="12" fill="#18181b" stroke="#22d3ee" stroke-width="1" style="color:#22d3ee"/>
+          <text class="node-icon" x="30" y="54" text-anchor="middle" fill="#22d3ee" style="font-size:9px">FS</text>
+        </g>
+        <g class="node-group d3" data-name="Payment Systems" data-desc-fr="Payplug, Alma, PSP" data-desc-en="Payplug, Alma, PSP integration">
+          <circle class="node-circle" cx="30" cy="130" r="12" fill="#18181b" stroke="#22d3ee" stroke-width="1" style="color:#22d3ee"/>
+          <text class="node-icon" x="30" y="134" text-anchor="middle" fill="#22d3ee" style="font-size:9px">&#8364;</text>
+        </g>
+        <g class="node-group d3" data-name="SAP Integration" data-desc-fr="OMS &harr; SAP &middot; flux ERP" data-desc-en="OMS &harr; SAP &middot; ERP flows">
+          <circle class="node-circle" cx="30" cy="210" r="12" fill="#18181b" stroke="#22d3ee" stroke-width="1" style="color:#22d3ee"/>
+          <text class="node-icon" x="30" y="214" text-anchor="middle" fill="#22d3ee" style="font-size:8px">SAP</text>
+        </g>
+
+        <!-- ── Architecture branch (purple) ── -->
+        <g class="node-group d1" data-name="Architecture" data-desc-fr="Conception de syst&egrave;mes distribu&eacute;s" data-desc-en="Distributed systems design">
+          <circle class="node-circle" cx="360" cy="350" r="18" fill="#18181b" stroke="#a78bfa" stroke-width="2" style="color:#a78bfa"/>
+          <text class="node-icon" x="360" y="355" text-anchor="middle" fill="#a78bfa">&#9632;</text>
+          <text class="node-label" x="360" y="380" text-anchor="middle">Architecture</text>
+        </g>
+        <g class="node-group d2" data-name="Design Patterns" data-desc-fr="SOLID, DDD, Clean Architecture" data-desc-en="SOLID, DDD, Clean Architecture">
+          <circle class="node-circle" cx="260" cy="400" r="15" fill="#18181b" stroke="#a78bfa" stroke-width="1.5" style="color:#a78bfa"/>
+          <text class="node-icon" x="260" y="405" text-anchor="middle" fill="#a78bfa" style="font-size:11px">&#9670;</text>
+          <text class="node-label" x="260" y="385" text-anchor="middle">Patterns</text>
+        </g>
+        <g class="node-group d2" data-name="Craftsmanship" data-desc-fr="Clean code, TDD, refactoring" data-desc-en="Clean code, TDD, refactoring">
+          <circle class="node-circle" cx="460" cy="400" r="15" fill="#18181b" stroke="#a78bfa" stroke-width="1.5" style="color:#a78bfa"/>
+          <text class="node-icon" x="460" y="405" text-anchor="middle" fill="#a78bfa" style="font-size:11px">&#9733;</text>
+          <text class="node-label" x="460" y="385" text-anchor="middle">Craftsmanship</text>
+        </g>
+
+        <!-- ── Leadership branch (green) ── -->
+        <g class="node-group d1" data-name="Leadership" data-desc-fr="Pilotage technique d'&eacute;quipe" data-desc-en="Technical team leadership">
+          <circle class="node-circle" cx="530" cy="110" r="18" fill="#18181b" stroke="#34d399" stroke-width="2" style="color:#34d399"/>
+          <text class="node-icon" x="530" y="115" text-anchor="middle" fill="#34d399">&#9654;</text>
+          <text class="node-label" x="530" y="140" text-anchor="middle">Leadership</text>
+        </g>
+        <g class="node-group d2" data-name="Tech Lead" data-desc-fr="Strat&eacute;gie technique, code reviews, mentoring" data-desc-en="Technical strategy, code reviews, mentoring">
+          <circle class="node-circle" cx="630" cy="50" r="15" fill="#18181b" stroke="#34d399" stroke-width="1.5" style="color:#34d399"/>
+          <text class="node-icon" x="630" y="55" text-anchor="middle" fill="#34d399" style="font-size:10px">TL</text>
+          <text class="node-label" x="630" y="75" text-anchor="middle">Tech Lead</text>
+        </g>
+        <g class="node-group d2" data-name="Team Management" data-desc-fr="Recrutement, rituels agile, montée en comp&eacute;tences" data-desc-en="Hiring, agile rituals, skill development">
+          <circle class="node-circle" cx="630" cy="170" r="15" fill="#18181b" stroke="#34d399" stroke-width="1.5" style="color:#34d399"/>
+          <text class="node-icon" x="630" y="175" text-anchor="middle" fill="#34d399" style="font-size:10px">&#9775;</text>
+          <text class="node-label" x="630" y="195" text-anchor="middle">Team Mgmt</text>
+        </g>
+        <g class="node-group d3" data-name="E-commerce" data-desc-fr="Jardiland, Gammvert, Aladin, Farmi" data-desc-en="Jardiland, Gammvert, Aladin, Farmi">
+          <circle class="node-circle" cx="690" cy="130" r="12" fill="#18181b" stroke="#34d399" stroke-width="1" style="color:#34d399"/>
+          <text class="node-icon" x="690" y="134" text-anchor="middle" fill="#34d399" style="font-size:9px">&#128722;</text>
+        </g>
+        <g class="node-group d3" data-name="E-commerce" data-desc-fr="Multi-enseignes, marketplace" data-desc-en="Multi-brand, marketplace">
+          <circle class="node-circle" cx="690" cy="220" r="12" fill="#18181b" stroke="#34d399" stroke-width="1" style="color:#34d399"/>
+          <text class="node-icon" x="690" y="224" text-anchor="middle" fill="#34d399" style="font-size:8px">MKT</text>
+        </g>
+
+      </svg>
+    </div>
+    <div class="tree-tooltip" id="tree-tooltip">
+      <div class="tt-name"></div>
+      <div class="tt-desc"></div>
+    </div>
+  </section>
+
+  <!-- ── About (bottom) ── -->
   <section class="about">
     <div class="section-label">
-      <span data-lang="fr">// &agrave; propos</span>
-      <span data-lang="en">// about</span>
+      <span data-lang="fr">// qui suis-je</span>
+      <span data-lang="en">// who am I</span>
     </div>
     <p data-lang="fr">
-      <span class="highlight">Tech Lead avec +7 ans d'exp&eacute;rience</span>, sp&eacute;cialis&eacute; dans l'&eacute;cosyst&egrave;me JavaScript/Node.js. Passionn&eacute; par le software craftsmanship, l'architecture logicielle et les design patterns. J'accompagne des &eacute;quipes sur des plateformes e-commerce &agrave; forte valeur business&nbsp;&mdash; de l'int&eacute;gration de syst&egrave;mes de paiement &agrave; l'orchestration de flux transactionnels complexes.
+      <span class="highlight">Ing&eacute;nieur de formation, artisan par conviction.</span> Je vis dans la Dr&ocirc;me avec ma femme et nos trois enfants, je travaille en full remote et je passe mon temps &agrave; construire &mdash; que ce soit des syst&egrave;mes de paiement pour des millions de transactions, une &eacute;tag&egrave;re dans mon atelier ou une app pour apprendre &agrave; compter. J'ai grandi chez OCTO Technology o&ugrave; j'ai appris la rigueur du craft, avant de poser mes valises chez InVivo Digital Factory o&ugrave; je pilote une &eacute;quipe depuis 2024. Ancien chef scout, j'aime transmettre &mdash; que ce soit autour d'un feu de camp ou dans une code review. Le soir, je l&egrave;ve les yeux vers <span class="stars-hint" title="Ad astra per aspera. &#10013;">les &eacute;toiles</span>.
     </p>
     <p data-lang="en">
-      <span class="highlight">Tech Lead with 7+ years of experience</span>, specialized in the JavaScript/Node.js ecosystem. Passionate about software craftsmanship, software architecture and design patterns. I lead teams building high-value e-commerce platforms&nbsp;&mdash; from payment system integration to complex transactional flow orchestration.
+      <span class="highlight">Engineer by training, craftsman by conviction.</span> I live in the Dr&ocirc;me valley with my wife and our three children, work fully remote, and spend my time building things &mdash; whether it's payment systems handling millions of transactions, a shelf in my workshop, or an app to learn multiplication tables. I grew up at OCTO Technology where I learned the rigor of the craft, before settling at InVivo Digital Factory where I've been leading a team since 2024. Former scout leader, I love passing things on &mdash; whether around a campfire or in a code review. In the evenings, I <span class="stars-hint" title="Ad astra per aspera. &#10013;">look up at the stars</span>.
     </p>
   </section>
 
-  <!-- ── Experience ── -->
-  <section>
-    <div class="section-label">
-      <span data-lang="fr">// exp&eacute;rience</span>
-      <span data-lang="en">// experience</span>
-    </div>
+</main>
 
-    <div class="timeline">
-
-      <div class="timeline-item">
-        <div class="timeline-date">2024 &mdash; now</div>
-        <div class="timeline-role">Technical Lead</div>
-        <div class="timeline-company">InVivo Digital Factory</div>
-        <p class="timeline-desc" data-lang="fr">
-          Pilotage de l'&eacute;quipe transactions financi&egrave;res pour Jardiland.com, Gammvert.fr, Aladin.farm, Farmi.fr. Int&eacute;gration PSP (Payplug), paiement fractionn&eacute; (Alma), interm&eacute;diation OMS&nbsp;&harr;&nbsp;SAP.
-        </p>
-        <p class="timeline-desc" data-lang="en">
-          Leading financial transactions team for Jardiland.com, Gammvert.fr, Aladin.farm, Farmi.fr. PSP integration (Payplug), split payment (Alma), OMS&nbsp;&harr;&nbsp;SAP intermediation.
-        </p>
-      </div>
-
-      <div class="timeline-item past">
-        <div class="timeline-date">2023 &mdash; 2024</div>
-        <div class="timeline-role">
-          <span data-lang="fr">Ing&eacute;nieur logiciels senior</span>
-          <span data-lang="en">Senior Software Engineer</span>
-        </div>
-        <div class="timeline-company">InVivo Digital Factory</div>
-        <p class="timeline-desc" data-lang="fr">
-          Refonte compl&egrave;te de la brique transactionnelle (du panier &agrave; la commande) sur B2Ag.farm et la marque blanche enseigne.com.
-        </p>
-        <p class="timeline-desc" data-lang="en">
-          Complete redesign of the transactional layer (cart to order) on B2Ag.farm and the enseigne.com white-label solution.
-        </p>
-      </div>
-
-      <div class="timeline-item past">
-        <div class="timeline-date">2021 &mdash; 2022</div>
-        <div class="timeline-role">
-          <span data-lang="fr">Ing&eacute;nieur logiciels confirm&eacute;</span>
-          <span data-lang="en">Software Engineer</span>
-        </div>
-        <div class="timeline-company">InVivo Digital Factory</div>
-        <p class="timeline-desc" data-lang="fr">
-          Conception d'une brique logistique commune. D&eacute;veloppement dans l'&eacute;quipe gestion de l'offre pour Aladin.farm, Fami.com, Jardiland.com, Gammvert.fr.
-        </p>
-        <p class="timeline-desc" data-lang="en">
-          Design of a shared logistics module. Development within the product management team for Aladin.farm, Fami.com, Jardiland.com, Gammvert.fr.
-        </p>
-      </div>
-
-      <div class="timeline-item past">
-        <div class="timeline-date">2018 &mdash; 2021</div>
-        <div class="timeline-role">Consultant</div>
-        <div class="timeline-company">OCTO Technology</div>
-        <p class="timeline-desc" data-lang="fr">
-          Missions vari&eacute;es : Aladin.farm (InVivo), billetterie Roland-Garros, conception de numerique.gouv.fr pour la DINSIC. Stack : Jekyll, Foundation, CircleCI.
-        </p>
-        <p class="timeline-desc" data-lang="en">
-          Various missions: Aladin.farm (InVivo), Roland-Garros ticketing, design &amp; development of numerique.gouv.fr for the French Digital Administration.
-        </p>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ── Projects ── -->
-  <section>
-    <div class="section-label">
-      <span data-lang="fr">// projets</span>
-      <span data-lang="en">// projects</span>
-    </div>
-
-    <div class="projects-grid">
-
-      <div class="project-card">
-        <div class="name">Jardiland &middot; Gammvert</div>
-        <div class="ctx">invivo &middot; 2021&mdash;now</div>
-        <p class="desc" data-lang="fr">Plateformes e-commerce multi-enseignes. Architecture transactionnelle, paiement, logistique, SAP.</p>
-        <p class="desc" data-lang="en">Multi-brand e-commerce platforms. Transactional architecture, payment, logistics, SAP.</p>
-      </div>
-
-      <div class="project-card">
-        <div class="name">Aladin.farm &middot; Farmi</div>
-        <div class="ctx">invivo + octo &middot; 2018&mdash;now</div>
-        <p class="desc" data-lang="fr">Plateforme B2Ag pour le monde agricole. Du d&eacute;veloppement initial au pilotage technique.</p>
-        <p class="desc" data-lang="en">B2Ag platform for agriculture. From initial development to technical leadership.</p>
-      </div>
-
-      <div class="project-card">
-        <div class="name">numerique.gouv.fr</div>
-        <div class="ctx">octo &middot; dinsic &middot; 2019</div>
-        <p class="desc" data-lang="fr">Site officiel de la direction interminist&eacute;rielle du num&eacute;rique. Jekyll, Foundation, CircleCI.</p>
-        <p class="desc" data-lang="en">Official website of the French Digital Administration. Jekyll, Foundation, CircleCI.</p>
-      </div>
-
-      <div class="project-card">
-        <div class="name">Roland-Garros</div>
-        <div class="ctx">octo &middot; rg.com &middot; 2019</div>
-        <p class="desc" data-lang="fr">Billetterie du tournoi de Roland-Garros.</p>
-        <p class="desc" data-lang="en">Ticketing system for the Roland-Garros tournament.</p>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ── Skills ── -->
-  <section>
-    <div class="section-label">
-      <span data-lang="fr">// comp&eacute;tences</span>
-      <span data-lang="en">// skills</span>
-    </div>
-
-    <div class="skills-categories">
-      <div>
-        <div class="skill-cat-label">stack</div>
-        <div class="skills-row">
-          <span class="skill-tag">JavaScript</span>
-          <span class="skill-tag">Node.js</span>
-          <span class="skill-tag">Vue.js</span>
-          <span class="skill-tag">Full Stack</span>
-        </div>
-      </div>
-      <div>
-        <div class="skill-cat-label">architecture</div>
-        <div class="skills-row">
-          <span class="skill-tag purple">Software Architecture</span>
-          <span class="skill-tag purple">Design Patterns</span>
-          <span class="skill-tag purple">Software Craftsmanship</span>
-          <span class="skill-tag purple">Payment Systems</span>
-        </div>
-      </div>
-      <div>
-        <div class="skill-cat-label">leadership</div>
-        <div class="skills-row">
-          <span class="skill-tag green">Technical Leadership</span>
-          <span class="skill-tag green">Team Management</span>
-          <span class="skill-tag green">E-commerce</span>
-          <span class="skill-tag green">SAP Integration</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── Education ── -->
-  <section>
-    <div class="section-label">
-      <span data-lang="fr">// formation</span>
-      <span data-lang="en">// education</span>
-    </div>
-
-    <div class="edu-item">
-      <div class="edu-title" data-lang="fr">Dipl&ocirc;me d'ing&eacute;nieur &mdash; Syst&egrave;mes d'information</div>
-      <div class="edu-title" data-lang="en">Engineering Degree &mdash; Information Systems</div>
-      <div class="edu-meta">ECE Paris &middot; 2012 &mdash; 2018</div>
-    </div>
-
-    <div class="edu-item">
-      <div class="edu-title">IELTS &mdash; 7.0 / 9.0</div>
-      <div class="edu-meta">British Council &middot; 2016</div>
-    </div>
-  </section>
-
-  <!-- ── Footer ── -->
   <footer>
     <div class="footer-links">
       <a href="mailto:etienne@bernoux.fr">email</a>
       <a href="https://github.com/Etienne-Bernoux" target="_blank">github</a>
       <a href="https://www.linkedin.com/in/etienne-bernoux-06313682/" target="_blank">linkedin</a>
     </div>
-    <div class="footer-copy">&copy; 2026 Etienne Bernoux</div>
+    <div class="footer-copy" title="Fac et spera.">&copy; 2026 Etienne Bernoux &middot; &#10013;</div>
   </footer>
 
 </div>
@@ -566,6 +999,179 @@
     const html = document.documentElement;
     html.lang = html.lang === 'fr' ? 'en' : 'fr';
   }
+
+  // ── Easter egg: secret dot click ──
+  (() => {
+    const dot = document.getElementById('secret-dot');
+    const msg = document.getElementById('secret-msg');
+    let clicks = 0;
+    dot.addEventListener('click', () => {
+      clicks++;
+      if (clicks >= 3) {
+        msg.classList.toggle('show');
+        clicks = 0;
+      }
+    });
+  })();
+
+  // ── Easter egg: Konami code ──
+  (() => {
+    const code = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+    let pos = 0;
+    const toast = document.getElementById('konami-toast');
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === code[pos]) {
+        pos++;
+        if (pos === code.length) {
+          pos = 0;
+          document.body.classList.add('konami-active');
+          toast.classList.add('show');
+          // Spawn shooting stars
+          for (let i = 0; i < 15; i++) {
+            setTimeout(() => spawnStar(), i * 120);
+          }
+          setTimeout(() => {
+            document.body.classList.remove('konami-active');
+            toast.classList.remove('show');
+          }, 4000);
+        }
+      } else {
+        pos = e.key === code[0] ? 1 : 0;
+      }
+    });
+
+    function spawnStar() {
+      const star = document.createElement('div');
+      star.textContent = '★';
+      star.style.cssText = `
+        position: fixed;
+        top: ${Math.random() * 60}%;
+        left: ${Math.random() * 100}%;
+        font-size: ${12 + Math.random() * 20}px;
+        color: #eab308;
+        pointer-events: none;
+        z-index: 99;
+        opacity: 1;
+        transition: all 1.5s ease-out;
+      `;
+      document.body.appendChild(star);
+      requestAnimationFrame(() => {
+        star.style.transform = `translateY(${60 + Math.random() * 100}px) rotate(${Math.random() * 360}deg)`;
+        star.style.opacity = '0';
+      });
+      setTimeout(() => star.remove(), 2000);
+    }
+  })();
+
+  // ── Exploration map: POI click → detail panel ──
+  (() => {
+    const panel = document.getElementById('map-detail');
+    const zoneName = document.getElementById('detail-zone');
+    const nameEl = document.getElementById('detail-name');
+    const ctxEl = document.getElementById('detail-ctx');
+    const descEl = document.getElementById('detail-desc');
+    const lang = () => document.documentElement.lang || 'fr';
+    let activePoi = null;
+
+    const zoneColors = {
+      code: '#22d3ee', spatial: '#a78bfa',
+      famille: '#eab308', atelier: '#34d399'
+    };
+
+    document.querySelectorAll('.poi').forEach(poi => {
+      poi.addEventListener('click', () => {
+        const l = lang();
+        const zone = poi.dataset.zone;
+        const name = (l === 'en' ? poi.dataset.nameEn : poi.dataset.nameFr) || poi.dataset.name || '';
+        const ctx = (l === 'en' ? poi.dataset.ctxEn : poi.dataset.ctxFr) || poi.dataset.ctx || '';
+        const desc = l === 'en' ? poi.dataset.descEn : poi.dataset.descFr;
+        const link = poi.dataset.link;
+        const color = poi.dataset.color;
+
+        // Toggle if same
+        if (activePoi === poi.dataset.poi) {
+          panel.classList.remove('show');
+          activePoi = null;
+          return;
+        }
+        activePoi = poi.dataset.poi;
+
+        zoneName.textContent = zone.toUpperCase();
+        zoneName.style.color = color;
+        nameEl.innerHTML = link ? `<a href="${link}" target="_blank">${name}</a>` : name;
+        ctxEl.textContent = ctx;
+        descEl.textContent = desc;
+        panel.style.borderColor = color;
+
+        panel.classList.add('show');
+      });
+    });
+
+    // Click outside map closes panel
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#map-section')) {
+        panel.classList.remove('show');
+        activePoi = null;
+      }
+    });
+  })();
+
+  // ── Achievements: staggered scroll reveal ──
+  (() => {
+    const items = document.querySelectorAll('.achievement');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const idx = [...items].indexOf(e.target);
+          setTimeout(() => e.target.classList.add('revealed'), idx * 100);
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    items.forEach(el => observer.observe(el));
+  })();
+
+  // ── Skill tree: scroll reveal + tooltips ──
+  (() => {
+    const svg = document.getElementById('skill-tree');
+    const tooltip = document.getElementById('tree-tooltip');
+    const lang = () => document.documentElement.lang || 'fr';
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          svg.classList.add('revealed');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    observer.observe(svg);
+
+    // Tooltips
+    svg.querySelectorAll('.node-group').forEach(node => {
+      node.addEventListener('mouseenter', (e) => {
+        const name = node.dataset.name;
+        const desc = lang() === 'en' ? node.dataset.descEn : node.dataset.descFr;
+        if (!name) return;
+        tooltip.querySelector('.tt-name').textContent = name;
+        tooltip.querySelector('.tt-desc').textContent = desc || '';
+        tooltip.classList.add('show');
+      });
+      node.addEventListener('mousemove', (e) => {
+        let x = e.clientX + 12, y = e.clientY - 10;
+        const rect = tooltip.getBoundingClientRect();
+        if (x + rect.width > window.innerWidth - 8) x = e.clientX - rect.width - 12;
+        if (y + rect.height > window.innerHeight - 8) y = e.clientY - rect.height - 4;
+        tooltip.style.left = x + 'px';
+        tooltip.style.top = y + 'px';
+      });
+      node.addEventListener('mouseleave', () => {
+        tooltip.classList.remove('show');
+      });
+    });
+  })();
 
   // ── Particle network ──
   (() => {
@@ -626,13 +1232,19 @@
           }
         }
       }
-
-      requestAnimationFrame(draw);
     }
+
+    let animId;
+    function loop() { draw(); animId = requestAnimationFrame(loop); }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) { cancelAnimationFrame(animId); }
+      else { loop(); }
+    });
 
     window.addEventListener('resize', resize);
     init();
-    draw();
+    loop();
   })();
 </script>
 
