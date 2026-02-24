@@ -44,10 +44,7 @@
     html[data-theme="light"] .achievement.legendary:hover { border-color: rgba(180, 130, 0, 0.6); }
     html[data-theme="light"] .achievement.epic { border-color: rgba(124, 58, 237, 0.3); }
     html[data-theme="light"] .achievement.epic:hover { border-color: rgba(124, 58, 237, 0.55); }
-    html[data-theme="light"] .node-circle,
-    html[data-theme="light"] .poi-dot { fill: #ffffff !important; }
-    html[data-theme="light"] .map-svg .zone-border { opacity: 0.9; }
-    html[data-theme="light"] .map-path { opacity: 0.2; }
+    html[data-theme="light"] .node-circle { fill: #ffffff !important; }
     html[data-theme="light"] .konami-toast { background: #ffffff; }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -170,74 +167,143 @@
 
     /* (timeline removed — replaced by achievements) */
 
-    /* ── Exploration Map ── */
-    .map-wrap {
+    /* ── Exploration Minimap ── */
+    .minimap {
       position: relative;
       width: 100%;
-      padding: 1rem 0;
+      aspect-ratio: 16 / 9;
+      background: rgba(10, 12, 18, 0.85);
+      border: 1px solid rgba(100, 220, 255, 0.15);
+      border-radius: var(--radius);
+      overflow: hidden;
     }
-    .map-svg {
-      display: block;
-      margin: 0 auto;
-      max-width: 100%;
-      height: auto;
+    html[data-theme="light"] .minimap {
+      background: rgba(15, 23, 42, 0.06);
+      border-color: rgba(0, 80, 120, 0.2);
     }
+    html[data-theme="light"] .mm-region { opacity: 0.12; }
+    html[data-theme="light"] .mm-label { opacity: 0.6; }
+    html[data-theme="light"] .mm-label[data-zone="code"]    { color: #0e7490; }
+    html[data-theme="light"] .mm-label[data-zone="spatial"] { color: #6d28d9; }
+    html[data-theme="light"] .mm-label[data-zone="atelier"] { color: #047857; }
+    html[data-theme="light"] .mm-label[data-zone="famille"] { color: #a16207; }
+    /* grid overlay */
+    .minimap::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(100, 220, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(100, 220, 255, 0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+    html[data-theme="light"] .minimap::before {
+      background-image:
+        linear-gradient(rgba(0, 60, 100, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 60, 100, 0.06) 1px, transparent 1px);
+    }
+    /* scan line animation */
+    .minimap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 0%, rgba(100, 220, 255, 0.03) 50%, transparent 100%);
+      height: 30%;
+      animation: scanline 4s linear infinite;
+      pointer-events: none;
+    }
+    html[data-theme="light"] .minimap::after {
+      background: linear-gradient(180deg, transparent 0%, rgba(0, 80, 140, 0.04) 50%, transparent 100%);
+    }
+    @keyframes scanline { 0% { top: -30%; } 100% { top: 100%; } }
 
-    /* Zone regions */
-    .map-svg .zone {
-      cursor: pointer;
-      transition: opacity 0.3s;
-      opacity: 0.7;
+    /* zone regions — positioned absolutely */
+    .mm-region {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(25px);
+      opacity: 0.15;
+      pointer-events: none;
+      transition: opacity 0.4s;
     }
-    .map-svg .zone:hover { opacity: 1; }
-    .map-svg .zone.active { opacity: 1; }
+    .mm-region[data-zone="code"]    { background: #22d3ee; width: 45%; height: 70%; top: 10%; left: 3%; }
+    .mm-region[data-zone="spatial"] { background: #a78bfa; width: 40%; height: 60%; top: 5%;  left: 55%; }
+    .mm-region[data-zone="atelier"] { background: #34d399; width: 35%; height: 55%; top: 40%; left: 55%; }
+    .mm-region[data-zone="famille"] { background: #eab308; width: 30%; height: 50%; top: 45%; left: 8%; }
 
-    .map-svg .zone-border {
-      fill: none;
-      stroke-width: 1;
-      stroke-dasharray: 4 3;
-      transition: stroke-width 0.2s, stroke-dasharray 0.2s;
-    }
-    .map-svg .zone:hover .zone-border,
-    .map-svg .zone.active .zone-border {
-      stroke-width: 1.5;
-      stroke-dasharray: none;
-    }
-
-    .map-svg .zone-label {
+    /* zone labels */
+    .mm-label {
+      position: absolute;
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 0.55rem;
       font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      opacity: 0.35;
       pointer-events: none;
     }
-    .map-svg .zone-icon {
-      font-size: 22px;
-      pointer-events: none;
-    }
+    .mm-label[data-zone="code"]    { color: #22d3ee; top: 8%;  left: 12%; }
+    .mm-label[data-zone="spatial"] { color: #a78bfa; top: 8%;  left: 68%; }
+    .mm-label[data-zone="atelier"] { color: #34d399; top: 62%; left: 68%; }
+    .mm-label[data-zone="famille"] { color: #eab308; top: 62%; left: 12%; }
 
-    /* Map POIs (points of interest) */
-    .map-svg .poi {
+    /* POI dots */
+    .mm-poi {
+      position: absolute;
       cursor: pointer;
-      transition: transform 0.2s;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      padding: 10px;
     }
-    .map-svg .poi:hover { transform: scale(1.2); }
-    .map-svg .poi-dot {
-      transition: r 0.2s, filter 0.2s;
+    .mm-poi .mm-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    .map-svg .poi:hover .poi-dot {
-      filter: drop-shadow(0 0 6px currentColor);
+    .mm-poi .mm-dot::after {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      border: 1px solid currentColor;
+      opacity: 0;
+      animation: poi-ping 2.5s ease-out infinite;
     }
-    .map-svg .poi-label {
+    @keyframes poi-ping {
+      0%   { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(2.5); opacity: 0; }
+    }
+    .mm-poi:hover .mm-dot { transform: scale(1.5); }
+    .mm-poi.active .mm-dot { transform: scale(1.8); }
+    .mm-poi .mm-tip {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
       font-family: var(--mono);
-      font-size: 8px;
+      font-size: 0.6rem;
+      color: var(--text);
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s;
       pointer-events: none;
+      background: rgba(10, 12, 18, 0.7);
+      padding: 2px 6px;
+      border-radius: 3px;
     }
+    html[data-theme="light"] .mm-poi .mm-tip {
+      background: rgba(255, 255, 255, 0.85);
+    }
+    .mm-poi:hover .mm-tip { opacity: 1; }
+    .mm-poi.placeholder .mm-dot { opacity: 0.25; }
+    .mm-poi.placeholder .mm-dot::after { display: none; }
 
-    /* Map paths between POIs */
-    .map-svg .map-path {
-      fill: none;
-      stroke-dasharray: 3 3;
-      opacity: 0.3;
+    @media (max-width: 580px) {
+      .minimap { aspect-ratio: 4 / 5; }
+      .mm-tip { display: none; }
     }
 
     /* Detail panel */
@@ -719,168 +785,71 @@
       <span data-lang="en">// things I build</span>
     </div>
 
-    <div class="map-wrap">
-      <svg id="explore-map" class="map-svg" viewBox="0 0 720 480" xmlns="http://www.w3.org/2000/svg">
+    <div class="minimap">
+      <!-- Glow regions -->
+      <div class="mm-region" data-zone="code"></div>
+      <div class="mm-region" data-zone="spatial"></div>
+      <div class="mm-region" data-zone="atelier"></div>
+      <div class="mm-region" data-zone="famille"></div>
 
-        <!-- ── Paths between POIs ── -->
-        <path class="map-path" d="M200,240 C260,200 300,160 360,120" stroke="#a78bfa" stroke-width="0.8"/>
-        <path class="map-path" d="M200,240 C200,300 240,360 300,380" stroke="#eab308" stroke-width="0.8"/>
-        <path class="map-path" d="M200,240 C140,240 100,200 80,160" stroke="#22d3ee" stroke-width="0.8"/>
-        <path class="map-path" d="M360,120 C420,100 480,110 520,130" stroke="#a78bfa" stroke-width="0.5"/>
-        <path class="map-path" d="M300,380 C360,400 400,390 440,370" stroke="#eab308" stroke-width="0.5"/>
-        <path class="map-path" d="M80,160 C60,120 70,80 100,60" stroke="#22d3ee" stroke-width="0.5"/>
-        <path class="map-path" d="M530,240 C560,200 580,170 600,140" stroke="#34d399" stroke-width="0.8"/>
-        <path class="map-path" d="M530,240 C560,280 580,310 600,340" stroke="#34d399" stroke-width="0.5"/>
+      <!-- Zone labels -->
+      <span class="mm-label" data-zone="code">Code</span>
+      <span class="mm-label" data-zone="spatial">Spatial</span>
+      <span class="mm-label" data-zone="atelier"><span data-lang="fr">Atelier</span><span data-lang="en">Workshop</span></span>
+      <span class="mm-label" data-zone="famille"><span data-lang="fr">Famille</span><span data-lang="en">Family</span></span>
 
-        <!-- ── Zone: CODE (west) ── -->
-        <g class="zone" data-zone="code">
-          <rect class="zone-border" x="20" y="80" width="220" height="200" rx="12" stroke="#22d3ee"/>
-          <text class="zone-icon" x="40" y="120" fill="#22d3ee">&#128187;</text>
-          <text class="zone-label" x="70" y="116" fill="#22d3ee">CODE</text>
-        </g>
+      <!-- CODE POIs — top-left quadrant -->
+      <div class="mm-poi" data-zone="code" style="top:22%;left:18%" data-poi="jardiland" data-name="Jardiland &middot; Gammvert" data-ctx="invivo &middot; 2021&mdash;now" data-desc-fr="E-commerce multi-enseignes. Paiement, logistique, int&eacute;gration SAP." data-desc-en="Multi-brand e-commerce. Payment, logistics, SAP integration." data-color="#22d3ee" data-link="">
+        <div class="mm-dot" style="background:#22d3ee;color:#22d3ee"></div>
+        <span class="mm-tip">Jardiland</span>
+      </div>
+      <div class="mm-poi" data-zone="code" style="top:35%;left:10%" data-poi="aladin" data-name="Aladin.farm &middot; Farmi" data-ctx="invivo + octo &middot; 2018&mdash;now" data-desc-fr="Plateforme B2Ag pour le monde agricole. Du d&eacute;veloppement initial au pilotage." data-desc-en="B2Ag platform for agriculture. From initial development to technical leadership." data-color="#22d3ee" data-link="">
+        <div class="mm-dot" style="background:#22d3ee;color:#22d3ee"></div>
+        <span class="mm-tip">Aladin.farm</span>
+      </div>
+      <div class="mm-poi" data-zone="code" style="top:28%;left:32%" data-poi="rg" data-name="Roland-Garros" data-ctx="octo &middot; rg.com &middot; 2019" data-desc-fr="Billetterie du tournoi de Roland-Garros." data-desc-en="Tournament ticketing system for Roland-Garros." data-color="#22d3ee" data-link="">
+        <div class="mm-dot" style="background:#22d3ee;color:#22d3ee"></div>
+        <span class="mm-tip">Roland-Garros</span>
+      </div>
+      <div class="mm-poi" data-zone="code" style="top:42%;left:24%" data-poi="gouv" data-name="numerique.gouv.fr" data-ctx="octo &middot; dinsic &middot; 2019" data-desc-fr="Site officiel du num&eacute;rique de l'&Eacute;tat. Jekyll, Foundation, CircleCI." data-desc-en="French government digital website. Jekyll, Foundation, CircleCI." data-color="#22d3ee" data-link="">
+        <div class="mm-dot" style="background:#22d3ee;color:#22d3ee"></div>
+        <span class="mm-tip">.gouv.fr</span>
+      </div>
 
-        <!-- POIs: Code -->
-        <g class="poi" data-poi="jardiland" data-zone="code"
-           data-name="Jardiland &middot; Gammvert"
-           data-ctx="invivo &middot; 2021&mdash;now"
-           data-desc-fr="E-commerce multi-enseignes. Paiement, logistique, int&eacute;gration SAP."
-           data-desc-en="Multi-brand e-commerce. Payment, logistics, SAP integration."
-           data-color="#22d3ee">
-          <circle class="poi-dot" cx="80" cy="160" r="6" fill="#18181b" stroke="#22d3ee" stroke-width="1.5" style="color:#22d3ee"/>
-          <text class="poi-label" x="80" y="178" text-anchor="middle" fill="#22d3ee">Jardiland</text>
-        </g>
-        <g class="poi" data-poi="aladin" data-zone="code"
-           data-name="Aladin.farm &middot; Farmi"
-           data-ctx="invivo + octo &middot; 2018&mdash;now"
-           data-desc-fr="Plateforme B2Ag pour le monde agricole. Du d&eacute;veloppement initial au pilotage."
-           data-desc-en="B2Ag platform for agriculture. From initial development to technical leadership."
-           data-color="#22d3ee">
-          <circle class="poi-dot" cx="100" cy="210" r="5" fill="#18181b" stroke="#22d3ee" stroke-width="1.5" style="color:#22d3ee"/>
-          <text class="poi-label" x="100" y="228" text-anchor="middle" fill="#22d3ee">Aladin</text>
-        </g>
-        <g class="poi" data-poi="gouv" data-zone="code"
-           data-name="numerique.gouv.fr"
-           data-ctx="octo &middot; dinsic &middot; 2019"
-           data-desc-fr="Site officiel du num&eacute;rique de l'&Eacute;tat. Jekyll, Foundation, CircleCI."
-           data-desc-en="French government digital website. Jekyll, Foundation, CircleCI."
-           data-color="#22d3ee">
-          <circle class="poi-dot" cx="180" cy="250" r="4" fill="#18181b" stroke="#22d3ee" stroke-width="1" style="color:#22d3ee"/>
-          <text class="poi-label" x="180" y="266" text-anchor="middle" fill="#22d3ee">.gouv.fr</text>
-        </g>
-        <g class="poi" data-poi="rg" data-zone="code"
-           data-name="Roland-Garros"
-           data-ctx="octo &middot; rg.com &middot; 2019"
-           data-desc-fr="Billetterie du tournoi de Roland-Garros."
-           data-desc-en="Tournament ticketing system for Roland-Garros."
-           data-color="#22d3ee">
-          <circle class="poi-dot" cx="200" cy="190" r="4" fill="#18181b" stroke="#22d3ee" stroke-width="1" style="color:#22d3ee"/>
-          <text class="poi-label" x="200" y="206" text-anchor="middle" fill="#22d3ee">RG</text>
-        </g>
+      <!-- SPATIAL POIs — top-right quadrant -->
+      <div class="mm-poi" data-zone="spatial" style="top:20%;left:72%" data-poi="space-veille" data-name-fr="Veille a&eacute;rospatiale" data-name-en="Aerospace watch" data-ctx="passion" data-desc-fr="SpaceX, Ariane, exploration spatiale. Le ciel comme horizon." data-desc-en="SpaceX, Ariane, space exploration. The sky as a horizon." data-color="#a78bfa" data-link="">
+        <div class="mm-dot" style="background:#a78bfa;color:#a78bfa"></div>
+        <span class="mm-tip" data-lang="fr">Veille a&eacute;ro</span>
+        <span class="mm-tip" data-lang="en">Aerospace</span>
+      </div>
+      <div class="mm-poi" data-zone="spatial" style="top:32%;left:82%" data-poi="drone" data-name-fr="Drone ECE" data-name-en="ECE Drone" data-ctx="ece &middot; 2012&mdash;2014" data-desc-fr="Conception d'un drone sur 2 ans. Chef de projet, ECE Inov-Award." data-desc-en="Drone built over 2 years. Project lead, ECE Inov-Award." data-color="#a78bfa" data-link="">
+        <div class="mm-dot" style="background:#a78bfa;color:#a78bfa"></div>
+        <span class="mm-tip" data-lang="fr">Drone ECE</span>
+        <span class="mm-tip" data-lang="en">ECE Drone</span>
+      </div>
 
-        <!-- ── Zone: SPATIAL (north) ── -->
-        <g class="zone" data-zone="spatial">
-          <rect class="zone-border" x="280" y="30" width="220" height="160" rx="12" stroke="#a78bfa"/>
-          <text class="zone-icon" x="300" y="70" fill="#a78bfa">&#128752;</text>
-          <text class="zone-label" x="333" y="66" fill="#a78bfa">SPATIAL</text>
-        </g>
+      <!-- ATELIER POIs — bottom-right quadrant -->
+      <div class="mm-poi" data-zone="atelier" style="top:68%;left:70%" data-poi="meubles" data-name-fr="Plans de meubles" data-name-en="Furniture plans" data-ctx-fr="bois &middot; conception &middot; en cours" data-ctx-en="wood &middot; design &middot; ongoing" data-desc-fr="Conception et fabrication de meubles. Plans, d&eacute;coupes, assemblage." data-desc-en="Furniture design and building. Plans, cuts, assembly." data-color="#34d399" data-link="">
+        <div class="mm-dot" style="background:#34d399;color:#34d399"></div>
+        <span class="mm-tip" data-lang="fr">Meubles</span>
+        <span class="mm-tip" data-lang="en">Furniture</span>
+      </div>
+      <div class="mm-poi" data-zone="atelier" style="top:78%;left:82%" data-poi="bricolage" data-name-fr="Bricolage" data-name-en="DIY" data-ctx-fr="maison &middot; r&eacute;parations" data-ctx-en="home &middot; repairs" data-desc-fr="Tout ce qui se r&eacute;pare, s'am&eacute;liore, se construit &agrave; la main." data-desc-en="Anything that can be fixed, improved, or built by hand." data-color="#34d399" data-link="">
+        <div class="mm-dot" style="background:#34d399;color:#34d399"></div>
+        <span class="mm-tip" data-lang="fr">Bricolage</span>
+        <span class="mm-tip" data-lang="en">DIY</span>
+      </div>
 
-        <!-- POIs: Spatial -->
-        <g class="poi" data-poi="space-veille" data-zone="spatial"
-           data-name-fr="Veille a&eacute;rospatiale"
-           data-name-en="Aerospace watch"
-           data-ctx="passion"
-           data-desc-fr="SpaceX, Ariane, exploration spatiale. Le ciel comme horizon."
-           data-desc-en="SpaceX, Ariane, space exploration. The sky as a horizon."
-           data-color="#a78bfa">
-          <circle class="poi-dot" cx="360" cy="100" r="5" fill="#18181b" stroke="#a78bfa" stroke-width="1.5" style="color:#a78bfa"/>
-          <text class="poi-label" x="360" y="88" text-anchor="middle" fill="#a78bfa">veille</text>
-        </g>
-        <g class="poi" data-poi="drone" data-zone="spatial"
-           data-name-fr="Drone ECE"
-           data-name-en="ECE Drone"
-           data-ctx="ece &middot; 2012&mdash;2014"
-           data-desc-fr="Conception d'un drone sur 2 ans. Chef de projet, ECE Inov-Award."
-           data-desc-en="Drone built over 2 years. Project lead, ECE Inov-Award."
-           data-color="#a78bfa">
-          <circle class="poi-dot" cx="440" cy="130" r="4" fill="#18181b" stroke="#a78bfa" stroke-width="1" style="color:#a78bfa"/>
-          <text class="poi-label" x="440" y="148" text-anchor="middle" fill="#a78bfa">drone</text>
-        </g>
-
-        <!-- ── Zone: FAMILLE (south) ── -->
-        <g class="zone" data-zone="famille">
-          <rect class="zone-border" x="240" y="320" width="230" height="140" rx="12" stroke="#eab308"/>
-          <text class="zone-icon" x="260" y="360" fill="#eab308">&#127968;</text>
-          <text class="zone-label" x="293" y="357" fill="#eab308">
-            <tspan data-lang="fr">FAMILLE</tspan>
-            <tspan data-lang="en">FAMILY</tspan>
-          </text>
-        </g>
-
-        <!-- POIs: Famille -->
-        <g class="poi" data-poi="mathquiz" data-zone="famille"
-           data-name="MathQuiz"
-           data-ctx="react &middot; pwa &middot; 2025"
-           data-desc-fr="App pour apprendre les tables de multiplication. Faite pour ceux qui comptent le plus."
-           data-desc-en="Multiplication tables app. Built for the ones who matter most."
-           data-link="https://etienne-bernoux.github.io/math-learner/"
-           data-color="#eab308">
-          <circle class="poi-dot" cx="320" cy="390" r="6" fill="#18181b" stroke="#eab308" stroke-width="1.5" style="color:#eab308"/>
-          <text class="poi-label" x="320" y="408" text-anchor="middle" fill="#eab308">MathQuiz</text>
-        </g>
-        <g class="poi" data-poi="future" data-zone="famille"
-           data-name-fr="&Agrave; venir..."
-           data-name-en="Coming soon..."
-           data-ctx="????"
-           data-desc-fr="D'autres outils pour la maison. Stay tuned."
-           data-desc-en="More tools for the household. Stay tuned."
-           data-color="#eab308">
-          <circle class="poi-dot" cx="420" cy="410" r="3" fill="#18181b" stroke="#eab308" stroke-width="1" style="color:#eab308" stroke-dasharray="2 2"/>
-          <text class="poi-label" x="420" y="426" text-anchor="middle" fill="#eab308" opacity="0.5">???</text>
-        </g>
-
-        <!-- ── Zone: ATELIER (east) ── -->
-        <g class="zone" data-zone="atelier">
-          <rect class="zone-border" x="500" y="170" width="200" height="200" rx="12" stroke="#34d399"/>
-          <text class="zone-icon" x="520" y="210" fill="#34d399">&#128296;</text>
-          <text class="zone-label" x="553" y="207" fill="#34d399">
-            <tspan data-lang="fr">ATELIER</tspan>
-            <tspan data-lang="en">WORKSHOP</tspan>
-          </text>
-        </g>
-
-        <!-- POIs: Atelier -->
-        <g class="poi" data-poi="meubles" data-zone="atelier"
-           data-name-fr="Plans de meubles"
-           data-name-en="Furniture plans"
-           data-ctx-fr="bois &middot; conception &middot; en cours"
-           data-ctx-en="wood &middot; design &middot; ongoing"
-           data-desc-fr="Conception et fabrication de meubles. Plans, d&eacute;coupes, assemblage."
-           data-desc-en="Furniture design and building. Plans, cuts, assembly."
-           data-color="#34d399">
-          <circle class="poi-dot" cx="590" cy="270" r="6" fill="#18181b" stroke="#34d399" stroke-width="1.5" style="color:#34d399"/>
-          <text class="poi-label" x="590" y="288" text-anchor="middle" fill="#34d399">meubles</text>
-        </g>
-        <g class="poi" data-poi="bricolage" data-zone="atelier"
-           data-name-fr="Bricolage"
-           data-name-en="DIY"
-           data-ctx-fr="maison &middot; r&eacute;parations"
-           data-ctx-en="home &middot; repairs"
-           data-desc-fr="Tout ce qui se r&eacute;pare, s'am&eacute;liore, se construit &agrave; la main."
-           data-desc-en="Anything that can be fixed, improved, or built by hand."
-           data-color="#34d399">
-          <circle class="poi-dot" cx="620" cy="340" r="4" fill="#18181b" stroke="#34d399" stroke-width="1" style="color:#34d399"/>
-          <text class="poi-label" x="620" y="356" text-anchor="middle" fill="#34d399">bricolage</text>
-        </g>
-
-        <!-- ── Center compass ── -->
-        <g opacity="0.3">
-          <circle cx="360" cy="240" r="3" fill="none" stroke="var(--text-dim)" stroke-width="0.5"/>
-          <line x1="360" y1="232" x2="360" y2="248" stroke="var(--text-dim)" stroke-width="0.5"/>
-          <line x1="352" y1="240" x2="368" y2="240" stroke="var(--text-dim)" stroke-width="0.5"/>
-          <text x="360" y="225" text-anchor="middle" fill="var(--text-dim)" font-size="7" font-family="var(--mono)">N</text>
-        </g>
-
-      </svg>
+      <!-- FAMILLE POIs — bottom-left quadrant -->
+      <div class="mm-poi" data-zone="famille" style="top:70%;left:18%" data-poi="mathquiz" data-name="MathQuiz" data-ctx="react &middot; pwa &middot; 2025" data-desc-fr="App pour apprendre les tables de multiplication. Faite pour ceux qui comptent le plus." data-desc-en="Multiplication tables app. Built for the ones who matter most." data-link="https://etienne-bernoux.github.io/math-learner/" data-color="#eab308">
+        <div class="mm-dot" style="background:#eab308;color:#eab308"></div>
+        <span class="mm-tip">MathQuiz</span>
+      </div>
+      <div class="mm-poi placeholder" data-zone="famille" style="top:80%;left:28%" data-poi="future" data-name-fr="&Agrave; venir..." data-name-en="Coming soon..." data-ctx="????" data-desc-fr="D'autres outils pour la maison. Stay tuned." data-desc-en="More tools for the household. Stay tuned." data-color="#eab308">
+        <div class="mm-dot" style="background:#eab308;color:#eab308"></div>
+        <span class="mm-tip" data-lang="fr">&Agrave; venir...</span>
+        <span class="mm-tip" data-lang="en">Coming soon...</span>
+      </div>
     </div>
 
     <!-- Detail panel below the map -->
@@ -1140,28 +1109,26 @@
     const lang = () => document.documentElement.lang || 'fr';
     let activePoi = null;
 
-    const zoneColors = {
-      code: '#22d3ee', spatial: '#a78bfa',
-      famille: '#eab308', atelier: '#34d399'
-    };
-
-    document.querySelectorAll('.poi').forEach(poi => {
+    document.querySelectorAll('.mm-poi').forEach(poi => {
       poi.addEventListener('click', () => {
         const l = lang();
-        const zone = poi.dataset.zone;
+        const zone = poi.dataset.zone || '';
         const name = (l === 'en' ? poi.dataset.nameEn : poi.dataset.nameFr) || poi.dataset.name || '';
         const ctx = (l === 'en' ? poi.dataset.ctxEn : poi.dataset.ctxFr) || poi.dataset.ctx || '';
         const desc = l === 'en' ? poi.dataset.descEn : poi.dataset.descFr;
         const link = poi.dataset.link;
         const color = poi.dataset.color;
 
-        // Toggle if same
+        // deselect previous
+        document.querySelectorAll('.mm-poi.active').forEach(p => p.classList.remove('active'));
+
         if (activePoi === poi.dataset.poi) {
           panel.classList.remove('show');
           activePoi = null;
           return;
         }
         activePoi = poi.dataset.poi;
+        poi.classList.add('active');
 
         zoneName.textContent = zone.toUpperCase();
         zoneName.style.color = color;
@@ -1169,12 +1136,10 @@
         ctxEl.textContent = ctx;
         descEl.textContent = desc;
         panel.style.borderColor = color;
-
         panel.classList.add('show');
       });
     });
 
-    // Click outside map closes panel
     document.addEventListener('click', (e) => {
       if (!e.target.closest('#map-section')) {
         panel.classList.remove('show');
