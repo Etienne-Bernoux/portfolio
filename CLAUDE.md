@@ -9,24 +9,54 @@ URL cible : `https://etienne-bernoux.github.io/portfolio/`
 
 ## Stack
 
-- **HTML/CSS/JS** — fichier unique `index.html`, zéro dépendance build
+- **HTML/CSS/JS** — ES modules, zéro dépendance build
 - **Fonts** — JetBrains Mono (code) + Inter (prose) via Google Fonts CDN
 - **Hébergement** — GitHub Pages, branche `main`, dossier `/`
+- **Tests** — Vitest (unit, co-localisés `.spec.js`) + Playwright BDD (e2e, Gherkin FR)
 - Pas de framework, pas de bundler, pas de Jekyll
 
-## Architecture du fichier
+## Architecture
 
-Tout est dans `index.html` :
+```
+portfolio/
+├── index.html                      # Squelette HTML, containers vides
+├── css/style.css                   # CSS avec custom properties
+├── src/
+│   ├── domain/                     # Logique pure, pas de DOM, testable
+│   │   ├── donnees/                # Données structurées (achievements, POIs, skills)
+│   │   ├── theme/                  # get/apply/toggle/init theme (localStorage)
+│   │   ├── langue/                 # get/toggle langue
+│   │   ├── easter-eggs/            # Konami (détecteur séquence), secret-dot (compteur clics)
+│   │   └── canvas/                 # Étoiles + avions (création, physique, rendu — pure math)
+│   └── ui/                         # Modules UI, chacun exporte initialiser*()
+│       ├── app.js                  # Shell d'init — importe et appelle tous les modules
+│       ├── hero.js                 # Secret dot wiring
+│       ├── achievements.js         # Génère grid + scroll-reveal
+│       ├── carte.js                # Génère POIs depuis donnees + detail panel
+│       ├── arbre.js                # Génère SVG skill tree + scroll-reveal + tooltips
+│       ├── canvas-bg.js            # Animation loop, resize, visibility
+│       ├── konami-ui.js            # keydown → stars + toast
+│       └── theme-ui.js             # Bouton theme + canvas reinit
+├── tests/e2e/
+│   ├── features/*.feature          # Gherkin en français
+│   └── steps/*.steps.js            # Step definitions Playwright
+├── package.json                    # type: module
+├── vitest.config.js
+└── playwright.config.js
+```
 
-1. `<style>` — CSS avec custom properties (dark theme)
-2. `<body>` — structure sémantique : `<main>` > sections + `<footer>`
-3. `<script>` — JS vanilla, IIFEs isolées
+### Principes DDD
+
+- **domain/** : fonctions pures, pas de `document`, pas de DOM → testables avec Vitest
+- **ui/** : chaque module exporte une fonction `initialiser*()` qui câble le DOM
+- **donnees/** : données immutables (`Object.freeze`), single source of truth
+- Tests unitaires co-localisés (`*.spec.js` à côté du source)
 
 ### Sections (ordre d'affichage)
 
 - **Hero** — prompt terminal, tagline, liens
 - **Achievements** — grille 2 colonnes, tiers legendary/epic/standard
-- **Carte explorable** — SVG 4 zones (CODE/SPATIAL/FAMILLE/ATELIER), POIs cliquables
+- **Carte explorable** — minimap 4 zones (CODE/SPATIAL/FAMILLE/ATELIER), POIs cliquables
 - **Skill tree** — SVG 3 branches depuis noeud "Craft", scroll-reveal
 - **About** — texte personnel (famille, scouts, étoiles)
 - **Footer** — liens + croix subtile
@@ -55,21 +85,18 @@ Tout est dans `index.html` :
 - **Animations** : CSS transitions + IntersectionObserver pour scroll-reveal
 - **Canvas** : particle network en background, se pause quand l'onglet est caché
 - Accessibilité : `focus-visible`, `prefers-reduced-motion`, sémantique HTML5
+- **Commits** : conventional commits en français
+- **Tests** : domain = Vitest specs co-localisés, UI = Playwright BDD Gherkin FR
 
 ## Règles de contribution (pour Claude)
 
-- Ce fichier est un **single-file** — ne jamais le splitter
-- Garder le volume sous contrôle : ~50 lignes max par itération
-- Toujours demander avant de coder : "Tu écris ou je propose ?"
 - Les éléments personnels (foi, famille) sont **subtils** — jamais in-your-face
 - Les références gaming (Factorio, Skyrim, etc.) sont des easter eggs, pas du contenu visible
-- Privilégier les SVG inline pour les éléments interactifs (tree, map)
-- Pas de `localStorage` ni de state persisté — tout est stateless
+- `localStorage` uniquement pour le thème
 
 ## Idées en réserve
 
 - **Barre XP** dans le hero (gamification, pas encore implémenté)
 - Galerie de plans de meubles dans la zone ATELIER
-- Nouveaux projets perso dans la zone FAMILLE
 - Favicon custom
 - `og:image` pour le partage social
