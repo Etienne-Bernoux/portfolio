@@ -33,32 +33,32 @@
   <circle cx="900" cy="120" r="1.1" fill="#fff" fill-opacity="0.4"/>
   <circle cx="1105" cy="268" r="1.5" fill="#fff" fill-opacity="0.5"/>
 
-  <text class="mono" x="76" y="170" font-size="22" fill="#a1a1aa">
+  <text class="mono" x="76" y="196" font-size="22" fill="#a1a1aa">
     <tspan fill="#34d399">~/etienne</tspan><tspan> </tspan><tspan fill="#22d3ee">&#8250;</tspan><tspan> cat README.md</tspan>
   </text>
 
-  <text class="sans" x="76" y="272" font-size="90" font-weight="700" letter-spacing="-3" fill="#e4e4e7">Etienne Bernoux<tspan fill="#22d3ee">.</tspan></text>
+  <text class="sans" x="76" y="298" font-size="90" font-weight="700" letter-spacing="-3" fill="#e4e4e7">Etienne Bernoux<tspan fill="#22d3ee">.</tspan></text>
 
-  <text class="mono" x="76" y="318" font-size="24" fill="#22d3ee">Tech Lead &amp; Software Craftsman</text>
+  <text class="mono" x="76" y="344" font-size="24" fill="#22d3ee">Tech Lead &amp; Software Craftsman</text>
 
-  <text class="sans" x="76" y="376" font-size="30" fill="#a1a1aa">Je construis des choses &#8212; du code, des meubles, des outils.</text>
+  <text class="sans" x="76" y="402" font-size="30" fill="#a1a1aa">Je construis des choses &#8212; du code, des meubles, des outils.</text>
 
   <g class="mono" font-size="18">
-    <rect x="76" y="414" width="101" height="42" rx="8" fill="none" stroke="#27272a"/>
-    <circle cx="100" cy="435" r="4" fill="#22d3ee"/>
-    <text x="114" y="441" fill="#22d3ee">CODE</text>
+    <rect x="76" y="446" width="101" height="42" rx="8" fill="none" stroke="#27272a"/>
+    <circle cx="100" cy="467" r="4" fill="#22d3ee"/>
+    <text x="114" y="473" fill="#22d3ee">CODE</text>
 
-    <rect x="191" y="414" width="134" height="42" rx="8" fill="none" stroke="#27272a"/>
-    <circle cx="215" cy="435" r="4" fill="#a78bfa"/>
-    <text x="229" y="441" fill="#a78bfa">SPATIAL</text>
+    <rect x="191" y="446" width="134" height="42" rx="8" fill="none" stroke="#27272a"/>
+    <circle cx="215" cy="467" r="4" fill="#a78bfa"/>
+    <text x="229" y="473" fill="#a78bfa">SPATIAL</text>
 
-    <rect x="339" y="414" width="134" height="42" rx="8" fill="none" stroke="#27272a"/>
-    <circle cx="363" cy="435" r="4" fill="#34d399"/>
-    <text x="377" y="441" fill="#34d399">ATELIER</text>
+    <rect x="339" y="446" width="134" height="42" rx="8" fill="none" stroke="#27272a"/>
+    <circle cx="363" cy="467" r="4" fill="#34d399"/>
+    <text x="377" y="473" fill="#34d399">ATELIER</text>
 
-    <rect x="487" y="414" width="134" height="42" rx="8" fill="none" stroke="#27272a"/>
-    <circle cx="511" cy="435" r="4" fill="#eab308"/>
-    <text x="525" y="441" fill="#eab308">FAMILLE</text>
+    <rect x="487" y="446" width="134" height="42" rx="8" fill="none" stroke="#27272a"/>
+    <circle cx="511" cy="467" r="4" fill="#eab308"/>
+    <text x="525" y="473" fill="#eab308">FAMILLE</text>
   </g>
 
   <text class="mono" x="1124" y="580" font-size="20" text-anchor="end" fill="#a1a1aa">etienne.bernoux.fr</text>

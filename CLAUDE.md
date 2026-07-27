@@ -23,7 +23,9 @@ portfolio/
 ├── favicon.svg                     # Chevron du prompt + le point cyan du nom
 ├── CNAME                           # etienne.bernoux.fr
 ├── css/style.css                   # CSS avec custom properties
-├── img/*.png                       # Captures des projets affichées dans le detail panel
+├── img/
+│   ├── og.png                      # Card de partage — généré, ne pas éditer à la main
+│   └── *.png                       # Captures des projets affichées dans le detail panel
 ├── scripts/
 │   ├── og-card.svg                 # Source de la card de partage 1200×630 (à éditer)
 │   └── generate-og.mjs             # `npm run og` → rasterise la card vers img/og.png
@@ -104,6 +106,21 @@ vert = atelier/leadership, gold = famille et branche AI & agents.
 - **Commits** : conventional commits en français
 - **Tests** : domain = Vitest specs co-localisés, UI = Playwright BDD Gherkin FR
 
+### Lancer les tests
+
+```bash
+npm test                     # Vitest (domain)
+npm run test:e2e             # bddgen + Playwright
+npm run test:all             # les deux
+```
+
+- `test:e2e` **doit** passer par `npx bddgen` : `npx playwright test` seul réutilise les specs
+  déjà générées dans `.features-gen/`, donc un scénario ajouté ou modifié est silencieusement
+  ignoré et la suite passe au vert sans l'avoir exécuté.
+- `PW_CHANNEL=chrome npm run test:e2e` pilote le Chrome installé au lieu du binaire Playwright —
+  échappatoire quand `npx playwright install` ne peut pas télécharger. Même variable pour
+  `npm run og`.
+
 ## Règles de contribution (pour Claude)
 
 - Les éléments personnels (foi, famille) sont **subtils** — jamais in-your-face
@@ -112,11 +129,6 @@ vert = atelier/leadership, gold = famille et branche AI & agents.
 
 ## Idées en réserve
 
-- **`og:image`** : la card est prête (`scripts/og-card.svg`). Reste à lancer `npm run og` pour
-  produire `img/og.png`, puis à déclarer dans `index.html` les balises `og:image`,
-  `og:image:width` (1200), `og:image:height` (630), `og:image:alt` et `twitter:card`
-  (`summary_large_image`). Tant que le PNG n'est pas commité, ne pas déclarer les balises :
-  un `og:image` en 404 dégrade l'aperçu au lieu de l'améliorer.
 - Galerie de plans de meubles dans la zone ATELIER
 - Captures d'écran pour les POIs qui n'en ont pas encore (Idle Crusade, One-Prompt Minecraft,
   plan-meubles)
