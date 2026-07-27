@@ -5,7 +5,7 @@
 Page portfolio personnelle hébergée sur GitHub Pages.
 Ce n'est **pas** un CV en ligne — c'est une page qui reflète qui je suis : dev, bricoleur, père, passionné d'aérospatial.
 
-URL cible : `https://etienne-bernoux.github.io/portfolio/`
+URL de production : `https://etienne.bernoux.fr/` (domaine custom via `CNAME`, servi par GitHub Pages)
 
 ## Stack
 
@@ -20,20 +20,30 @@ URL cible : `https://etienne-bernoux.github.io/portfolio/`
 ```
 portfolio/
 ├── index.html                      # Squelette HTML, containers vides
+├── favicon.svg                     # Chevron du prompt + le point cyan du nom
+├── CNAME                           # etienne.bernoux.fr
 ├── css/style.css                   # CSS avec custom properties
+├── img/
+│   ├── og.png                      # Card de partage — généré, ne pas éditer à la main
+│   └── *.png                       # Captures des projets affichées dans le detail panel
+├── scripts/
+│   ├── og-card.svg                 # Source de la card de partage 1200×630 (à éditer)
+│   └── generate-og.mjs             # `npm run og` → rasterise la card vers img/og.png
 ├── src/
 │   ├── domain/                     # Logique pure, pas de DOM, testable
 │   │   ├── donnees/                # Données structurées (achievements, POIs, skills)
 │   │   ├── theme/                  # get/apply/toggle/init theme (localStorage)
 │   │   ├── langue/                 # get/toggle langue
+│   │   ├── xp/                     # Niveau + progression de craft depuis la date de début
 │   │   ├── easter-eggs/            # Konami (détecteur séquence), secret-dot (compteur clics)
 │   │   └── canvas/                 # Étoiles + avions (création, physique, rendu — pure math)
 │   └── ui/                         # Modules UI, chacun exporte initialiser*()
 │       ├── app.js                  # Shell d'init — importe et appelle tous les modules
 │       ├── hero.js                 # Secret dot wiring
+│       ├── xp.js                   # Barre XP du hero (niveau, remplissage, aria)
 │       ├── achievements.js         # Génère grid + scroll-reveal
-│       ├── carte.js                # Génère POIs depuis donnees + detail panel
-│       ├── arbre.js                # Génère SVG skill tree + scroll-reveal + tooltips
+│       ├── carte.js                # Génère POIs (boutons) depuis donnees + detail panel
+│       ├── arbre.js                # Pose le viewBox + génère SVG skill tree, reveal, tooltips
 │       ├── canvas-bg.js            # Animation loop, resize, visibility
 │       ├── konami-ui.js            # keydown → stars + toast
 │       └── theme-ui.js             # Bouton theme + canvas reinit
@@ -51,13 +61,18 @@ portfolio/
 - **ui/** : chaque module exporte une fonction `initialiser*()` qui câble le DOM
 - **donnees/** : données immutables (`Object.freeze`), single source of truth
 - Tests unitaires co-localisés (`*.spec.js` à côté du source)
+- **Les données portent aussi leur géométrie** : `SKILLS.viewBox`, positions des POIs. Les specs
+  `pois.spec.js` / `skills.spec.js` vérifient les invariants de layout (pas de chevauchement,
+  labels dans le viewBox, arêtes reliées à de vrais nœuds) — un déplacement qui casse la carte
+  échoue en test unitaire, pas à l'œil en prod.
 
 ### Sections (ordre d'affichage)
 
-- **Hero** — prompt terminal, tagline, liens
+- **Hero** — prompt terminal, tagline, barre XP (niveau de craft), liens
 - **Achievements** — grille 2 colonnes, tiers legendary/epic/standard
-- **Carte explorable** — minimap 4 zones (CODE/SPATIAL/FAMILLE/ATELIER), POIs cliquables
-- **Skill tree** — SVG 3 branches depuis noeud "Craft", scroll-reveal
+- **Carte explorable** — minimap 4 zones (CODE/SPATIAL/FAMILLE/ATELIER), POIs = `<button>`
+- **Skill tree** — SVG 4 branches depuis noeud "Craft" (stack / architecture / AI & agents /
+  leadership), scroll-reveal
 - **About** — texte personnel (famille, scouts, étoiles)
 - **Footer** — liens + croix subtile
 
@@ -78,6 +93,9 @@ portfolio/
 --border: #27272a
 ```
 
+Correspondance couleur → sens : cyan = code/stack, violet = spatial/architecture,
+vert = atelier/leadership, gold = famille et branche AI & agents.
+
 ## Conventions
 
 - **Bilingue FR/EN** via attributs `data-lang="fr|en"` et sélecteur `html[lang]` en CSS
@@ -88,6 +106,21 @@ portfolio/
 - **Commits** : conventional commits en français
 - **Tests** : domain = Vitest specs co-localisés, UI = Playwright BDD Gherkin FR
 
+### Lancer les tests
+
+```bash
+npm test                     # Vitest (domain)
+npm run test:e2e             # bddgen + Playwright
+npm run test:all             # les deux
+```
+
+- `test:e2e` **doit** passer par `npx bddgen` : `npx playwright test` seul réutilise les specs
+  déjà générées dans `.features-gen/`, donc un scénario ajouté ou modifié est silencieusement
+  ignoré et la suite passe au vert sans l'avoir exécuté.
+- `PW_CHANNEL=chrome npm run test:e2e` pilote le Chrome installé au lieu du binaire Playwright —
+  échappatoire quand `npx playwright install` ne peut pas télécharger. Même variable pour
+  `npm run og`.
+
 ## Règles de contribution (pour Claude)
 
 - Les éléments personnels (foi, famille) sont **subtils** — jamais in-your-face
@@ -96,7 +129,7 @@ portfolio/
 
 ## Idées en réserve
 
-- **Barre XP** dans le hero (gamification, pas encore implémenté)
 - Galerie de plans de meubles dans la zone ATELIER
-- Favicon custom
-- `og:image` pour le partage social
+- Captures d'écran pour les POIs qui n'en ont pas encore (Idle Crusade, One-Prompt Minecraft,
+  plan-meubles)
+- Passer la carte au clavier de POI en POI (flèches) en plus du `Tab`

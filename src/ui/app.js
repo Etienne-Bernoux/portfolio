@@ -1,6 +1,7 @@
 import { toggleLang } from '../domain/langue/langue.js';
 import { initialiserTheme } from './theme-ui.js';
 import { initialiserHero } from './hero.js';
+import { initialiserXp } from './xp.js';
 import { initialiserKonami } from './konami-ui.js';
 import { initialiserAchievements } from './achievements.js';
 import { initialiserCarte } from './carte.js';
@@ -16,6 +17,7 @@ document.querySelector('.lang-toggle').addEventListener('click', () => toggleLan
 
 // Sections
 initialiserHero();
+initialiserXp();
 initialiserAchievements();
 initialiserCarte();
 initialiserArbre();

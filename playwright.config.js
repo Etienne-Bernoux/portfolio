@@ -17,6 +17,8 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
   },
   projects: [
-    { name: 'chromium', use: { browserName: 'chromium' } },
+    // PW_CHANNEL=chrome pilote le Chrome installé, utile quand les binaires
+    // Playwright ne peuvent pas être téléchargés.
+    { name: 'chromium', use: { browserName: 'chromium', channel: process.env.PW_CHANNEL } },
   ],
 });

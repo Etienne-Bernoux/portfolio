@@ -2,7 +2,6 @@ import { ACHIEVEMENTS } from '../domain/donnees/achievements.js';
 
 export function initialiserAchievements() {
   const grid = document.querySelector('.achievements-grid');
-  const lang = () => document.documentElement.lang || 'fr';
 
   grid.innerHTML = ACHIEVEMENTS.map(a => {
     const tierClass = a.tier !== 'standard' ? ` ${a.tier}` : '';
