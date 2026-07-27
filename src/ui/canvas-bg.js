@@ -22,8 +22,14 @@ export function initialiserCanvas() {
 }
 
 function resize() {
-  w = canvas.width = window.innerWidth;
-  h = canvas.height = window.innerHeight;
+  // Le domaine dessine en pixels CSS : on monte la résolution du bitmap et on
+  // laisse la transformation absorber le ratio, sinon tout est flou en retina.
+  const ratio = window.devicePixelRatio || 1;
+  w = window.innerWidth;
+  h = window.innerHeight;
+  canvas.width = Math.round(w * ratio);
+  canvas.height = Math.round(h * ratio);
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
 }
 
 function draw() {
