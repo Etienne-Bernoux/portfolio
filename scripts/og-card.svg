@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <pattern id="grille" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M60 0H0v60" fill="none" stroke="#64dcff" stroke-opacity="0.05" stroke-width="1"/>
+    </pattern>
+    <radialGradient id="halo-cyan">
+      <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="halo-violet">
+      <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="halo-vert">
+      <stop offset="0%" stop-color="#34d399" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#34d399" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .mono { font-family: 'JetBrains Mono', Menlo, monospace; }
+      .sans { font-family: Inter, 'Helvetica Neue', Helvetica, sans-serif; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="630" fill="#09090b"/>
+  <rect width="1200" height="630" fill="url(#grille)"/>
+  <ellipse cx="90" cy="70" rx="380" ry="320" fill="url(#halo-cyan)"/>
+  <ellipse cx="1140" cy="90" rx="340" ry="300" fill="url(#halo-violet)"/>
+  <ellipse cx="900" cy="640" rx="360" ry="280" fill="url(#halo-vert)"/>
+
+  <circle cx="1010" cy="88" r="1.6" fill="#fff" fill-opacity="0.8"/>
+  <circle cx="1092" cy="150" r="1.1" fill="#fff" fill-opacity="0.55"/>
+  <circle cx="960" cy="212" r="2" fill="#fff" fill-opacity="0.65"/>
+  <circle cx="900" cy="120" r="1.1" fill="#fff" fill-opacity="0.4"/>
+  <circle cx="1105" cy="268" r="1.5" fill="#fff" fill-opacity="0.5"/>
+
+  <text class="mono" x="76" y="170" font-size="22" fill="#a1a1aa">
+    <tspan fill="#34d399">~/etienne</tspan><tspan> </tspan><tspan fill="#22d3ee">&#8250;</tspan><tspan> cat README.md</tspan>
+  </text>
+
+  <text class="sans" x="76" y="272" font-size="90" font-weight="700" letter-spacing="-3" fill="#e4e4e7">Etienne Bernoux<tspan fill="#22d3ee">.</tspan></text>
+
+  <text class="mono" x="76" y="318" font-size="24" fill="#22d3ee">Tech Lead &amp; Software Craftsman</text>
+
+  <text class="sans" x="76" y="376" font-size="30" fill="#a1a1aa">Je construis des choses &#8212; du code, des meubles, des outils.</text>
+
+  <g class="mono" font-size="18">
+    <rect x="76" y="414" width="101" height="42" rx="8" fill="none" stroke="#27272a"/>
+    <circle cx="100" cy="435" r="4" fill="#22d3ee"/>
+    <text x="114" y="441" fill="#22d3ee">CODE</text>
+
+    <rect x="191" y="414" width="134" height="42" rx="8" fill="none" stroke="#27272a"/>
+    <circle cx="215" cy="435" r="4" fill="#a78bfa"/>
+    <text x="229" y="441" fill="#a78bfa">SPATIAL</text>
+
+    <rect x="339" y="414" width="134" height="42" rx="8" fill="none" stroke="#27272a"/>
+    <circle cx="363" cy="435" r="4" fill="#34d399"/>
+    <text x="377" y="441" fill="#34d399">ATELIER</text>
+
+    <rect x="487" y="414" width="134" height="42" rx="8" fill="none" stroke="#27272a"/>
+    <circle cx="511" cy="435" r="4" fill="#eab308"/>
+    <text x="525" y="441" fill="#eab308">FAMILLE</text>
+  </g>
+
+  <text class="mono" x="1124" y="580" font-size="20" text-anchor="end" fill="#a1a1aa">etienne.bernoux.fr</text>
+</svg>

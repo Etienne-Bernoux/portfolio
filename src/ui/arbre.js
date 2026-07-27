@@ -7,6 +7,8 @@ export function initialiserArbre() {
   const tooltip = document.getElementById('tree-tooltip');
   const lang = () => document.documentElement.lang || 'fr';
 
+  svg.setAttribute('viewBox', SKILLS.viewBox);
+
   // Generate edges
   for (const edge of SKILLS.edges) {
     const line = document.createElementNS(SVG_NS, 'line');
