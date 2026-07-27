@@ -50,6 +50,33 @@ describe('SKILLS', () => {
     }
   });
 
+  it('ne fait passer aucune arête à travers un label', () => {
+    // .node-label : mono 10px, avance 0.6em, ~7px au-dessus de la baseline et 2px sous
+    const boite = (n) => {
+      const largeur = n.label.length * 6;
+      const baseline = n.cy + n.r + OFFSET_LABEL;
+      return { x1: n.cx - largeur / 2, x2: n.cx + largeur / 2, y1: baseline - 7, y2: baseline + 2 };
+    };
+    // Découpe le segment finement : suffisant ici, et sans géométrie analytique à relire
+    const traverse = (edge, b) => {
+      const pas = 200;
+      for (let i = 0; i <= pas; i++) {
+        const x = edge.x1 + (edge.x2 - edge.x1) * (i / pas);
+        const y = edge.y1 + (edge.y2 - edge.y1) * (i / pas);
+        if (x >= b.x1 && x <= b.x2 && y >= b.y1 && y <= b.y2) return true;
+      }
+      return false;
+    };
+
+    for (const node of SKILLS.nodes.filter(n => n.label)) {
+      const b = boite(node);
+      for (const edge of SKILLS.edges) {
+        expect(traverse(edge, b), `${node.label} traversé par ${edge.x1},${edge.y1}→${edge.x2},${edge.y2}`)
+          .toBe(false);
+      }
+    }
+  });
+
   it('ne fait pas se chevaucher deux nœuds', () => {
     const { nodes } = SKILLS;
     for (let i = 0; i < nodes.length; i++) {
