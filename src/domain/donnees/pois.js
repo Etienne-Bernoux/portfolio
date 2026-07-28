@@ -25,6 +25,14 @@ export const POIS = Object.freeze([
     tip: { fr: 'Idle Crusade', en: 'Idle Crusade' },
   },
   {
+    id: 'carillon', zone: 'code', top: 33, left: 21,
+    name: { fr: 'Carillon', en: 'Carillon' },
+    ctx: { fr: 'typescript · vite · 2026', en: 'typescript · vite · 2026' },
+    desc: { fr: 'Bac à sable musical : on dessine des barres, on lâche des billes, chaque rebond joue une note. La géométrie accorde l’instrument, et la scène entière tient dans son URL.', en: 'A musical sandbox: draw bars, drop marbles, every bounce plays a note. Geometry tunes the instrument, and the whole scene fits in its URL.' },
+    color: '#22d3ee', link: 'https://etienne-bernoux.github.io/carillon/', img: '',
+    tip: { fr: 'Carillon', en: 'Carillon' },
+  },
+  {
     id: 'aladin', zone: 'code', top: 27, left: 9,
     name: { fr: 'Aladin.farm · Farmi', en: 'Aladin.farm · Farmi' },
     ctx: { fr: 'invivo digital factory · 2018—now', en: 'invivo digital factory · 2018—now' },

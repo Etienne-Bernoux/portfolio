@@ -2,9 +2,12 @@ import { describe, it, expect } from 'vitest';
 import { POIS } from './pois.js';
 
 const ZONES = ['code', 'spatial', 'atelier', 'famille'];
-// Dimensions de rendu de la minimap en desktop (max-width 760px, ratio 16/9)
-const LARGEUR_PX = 760;
-const HAUTEUR_PX = 760 * 9 / 16;
+// Les positions sont en %, donc l'écart réel dépend du rendu. La minimap change de ratio
+// sous 580px : un espacement correct en desktop peut se chevaucher en mobile.
+const RENDUS = [
+  { nom: 'desktop', largeur: 760, hauteur: 760 * 9 / 16 },
+  { nom: 'mobile', largeur: 343, hauteur: 343 * 5 / 4 },
+];
 // Chaque POI est un bouton de 28px (pastille 8px + 10px de padding) : en dessous, les cibles se marchent dessus
 const ECART_MIN_PX = 28;
 
@@ -36,13 +39,13 @@ describe('POIS', () => {
     }
   });
 
-  it('espace les POI pour que les cibles de clic ne se recouvrent pas', () => {
+  it.each(RENDUS)('espace les POI pour que les cibles de clic ne se recouvrent pas en $nom', ({ largeur, hauteur }) => {
     for (let i = 0; i < POIS.length; i++) {
       for (let j = i + 1; j < POIS.length; j++) {
         const a = POIS[i], b = POIS[j];
         const distance = Math.hypot(
-          (a.left - b.left) / 100 * LARGEUR_PX,
-          (a.top - b.top) / 100 * HAUTEUR_PX,
+          (a.left - b.left) / 100 * largeur,
+          (a.top - b.top) / 100 * hauteur,
         );
         expect(distance, `${a.id} / ${b.id}`).toBeGreaterThan(ECART_MIN_PX);
       }
