@@ -34,7 +34,7 @@ describe('calculerXp', () => {
     expect(calculerXp(avant, debut)).toEqual({ niveau: 0, progression: 0 });
   });
 
-  it('a passé le niveau 7 en 2026', () => {
-    expect(calculerXp(new Date('2026-07-27')).niveau).toBe(7);
+  it('a passé le niveau 8 à l\'été 2026', () => {
+    expect(calculerXp(new Date('2026-07-28')).niveau).toBe(8);
   });
 });

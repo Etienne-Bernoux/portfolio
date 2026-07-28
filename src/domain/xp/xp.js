@@ -1,4 +1,4 @@
-export const DEBUT_CARRIERE = '2018-09-01';
+export const DEBUT_CARRIERE = '2018-06-01';
 
 const MS_PAR_AN = 365.2425 * 24 * 60 * 60 * 1000;
 

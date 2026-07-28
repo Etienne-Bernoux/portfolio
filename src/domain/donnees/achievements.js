@@ -44,8 +44,8 @@ export const ACHIEVEMENTS = Object.freeze([
   {
     icon: '🌱',
     title: { fr: 'Aladin.farm', en: 'Aladin.farm' },
-    desc: { fr: 'Plateforme B2Ag pour le monde agricole — du début à aujourd’hui', en: 'B2Ag platform for agriculture — from day one to now' },
-    year: 'OCTO → InVivo · 2018',
+    desc: { fr: 'Plateforme B2Ag pour le monde agricole — consultant puis interne', en: 'B2Ag platform for agriculture — consultant, then in-house' },
+    year: 'InVivo Digital Factory · 2018 →',
     tier: 'standard',
   },
   {

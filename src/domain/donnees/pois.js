@@ -3,7 +3,7 @@ export const POIS = Object.freeze([
   {
     id: 'jardiland', zone: 'code', top: 15, left: 12,
     name: { fr: 'Jardiland · Gammvert', en: 'Jardiland · Gammvert' },
-    ctx: { fr: 'invivo · 2021—now', en: 'invivo · 2021—now' },
+    ctx: { fr: 'invivo digital factory · 2021—now', en: 'invivo digital factory · 2021—now' },
     desc: { fr: 'E-commerce multi-enseignes. Paiement, logistique, intégration SAP.', en: 'Multi-brand e-commerce. Payment, logistics, SAP integration.' },
     color: '#22d3ee', link: '', img: '',
     tip: { fr: 'Jardiland', en: 'Jardiland' },
@@ -27,8 +27,8 @@ export const POIS = Object.freeze([
   {
     id: 'aladin', zone: 'code', top: 27, left: 9,
     name: { fr: 'Aladin.farm · Farmi', en: 'Aladin.farm · Farmi' },
-    ctx: { fr: 'invivo + octo · 2018—now', en: 'invivo + octo · 2018—now' },
-    desc: { fr: 'Plateforme B2Ag pour le monde agricole. Du développement initial au pilotage.', en: 'B2Ag platform for agriculture. From initial development to technical leadership.' },
+    ctx: { fr: 'invivo digital factory · 2018—now', en: 'invivo digital factory · 2018—now' },
+    desc: { fr: 'Plateforme B2Ag pour le monde agricole. D’abord comme consultant, puis en interne : du développement initial au pilotage.', en: 'B2Ag platform for agriculture. First as a consultant, then in-house: from initial development to technical leadership.' },
     color: '#22d3ee', link: '', img: '',
     tip: { fr: 'Aladin.farm', en: 'Aladin.farm' },
   },
