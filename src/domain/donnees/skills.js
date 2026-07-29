@@ -28,7 +28,7 @@ export const SKILLS = Object.freeze({
     // Root
     { name: 'Craft', icon: '⚙', cx: 360, cy: 210, r: 24, color: '#22d3ee', strokeWidth: 2.5, delay: 'd0', label: 'Craft', desc: { fr: 'Le noyau — code, bois, idées', en: 'The core — code, wood, ideas' } },
     // Stack (cyan)
-    { name: 'TypeScript / JS', icon: 'TS', cx: 200, cy: 110, r: 18, color: '#22d3ee', strokeWidth: 2, delay: 'd1', label: 'TypeScript', desc: { fr: 'Langage principal · 7+ ans — TypeScript par défaut', en: 'Primary language · 7+ years — TypeScript by default' }, iconSize: 13 },
+    { name: 'TypeScript / JS', icon: 'TS', cx: 200, cy: 110, r: 18, color: '#22d3ee', strokeWidth: 2, delay: 'd1', label: 'TypeScript', desc: { fr: 'Langage principal · 8+ ans — TypeScript par défaut', en: 'Primary language · 8+ years — TypeScript by default' }, iconSize: 13 },
     { name: 'Vue.js', icon: 'V', cx: 100, cy: 50, r: 15, color: '#22d3ee', strokeWidth: 1.5, delay: 'd2', label: 'Vue.js', desc: { fr: 'Framework front de prédilection', en: 'Go-to frontend framework' }, iconSize: 11 },
     { name: 'Tests', icon: '✓', cx: 100, cy: 110, r: 15, color: '#22d3ee', strokeWidth: 1.5, delay: 'd2', label: 'Tests', desc: { fr: 'Vitest, Playwright — specs Gherkin en français', en: 'Vitest, Playwright — Gherkin specs in French' }, iconSize: 11 },
     { name: 'Node.js', icon: 'N', cx: 100, cy: 170, r: 15, color: '#22d3ee', strokeWidth: 1.5, delay: 'd2', label: 'Node.js', desc: { fr: 'Backend runtime · APIs, microservices', en: 'Backend runtime · APIs, microservices' }, iconSize: 11 },
